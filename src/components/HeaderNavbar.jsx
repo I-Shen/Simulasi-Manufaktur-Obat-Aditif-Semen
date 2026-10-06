@@ -45,7 +45,10 @@ export const HeaderNavbar = () => {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-lg font-bold text-white tracking-wide">PT. PIONIR NUSANTARA SUKSES</h1>
+              <h1 className="text-lg font-bold text-white tracking-wide">PT. MINERAL ADITIF NUSANTARA</h1>
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30">
+                CONFIDENTIAL CLIENT
+              </span>
               <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">
                 SCADA v3.2
               </span>

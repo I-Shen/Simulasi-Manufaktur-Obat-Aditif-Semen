@@ -84,7 +84,7 @@ export function App() {
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <Factory className="w-4 h-4 text-cyan-500" />
-            <span className="text-slate-400 font-bold">PT. PIONIR NUSANTARA SUKSES</span>
+            <span className="text-slate-400 font-bold">PT. MINERAL ADITIF NUSANTARA</span>
             <span>— Industrial Process & Logistics Twin</span>
           </div>
           <div>

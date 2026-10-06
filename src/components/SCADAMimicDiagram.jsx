@@ -20,6 +20,7 @@ import {
 export const SCADAMimicDiagram = () => {
   const {
     isRunning,
+    isLunchBreak,
     activeBottleneck,
     capacityPerHour,
     fuelType,
@@ -35,7 +36,7 @@ export const SCADAMimicDiagram = () => {
   } = useIndustrialStore();
 
   const metrics = getMetrics();
-  const isStopped = !isRunning || activeBottleneck !== 'none';
+  const isStopped = !isRunning || activeBottleneck !== 'none' || isLunchBreak;
 
   // Percentage calculations
   const bentonitePct = Math.min(100, Math.round((bentoniteStock / 134.4) * 100));
@@ -54,12 +55,23 @@ export const SCADAMimicDiagram = () => {
           <h2 className="text-base font-bold text-white tracking-wide uppercase">
             SCADA Live Material Flow & Process Mimic
           </h2>
+          {isLunchBreak && (
+            <span className="text-xs px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse font-bold">
+              ⏸️ ISTIRAHAT SIANG — MESIN STANDBY
+            </span>
+          )}
         </div>
         <div className="flex items-center gap-3 text-xs font-mono">
           <span className="text-slate-400">Throughput Rate:</span>
-          <span className="px-2.5 py-1 rounded bg-slate-800 text-cyan-400 font-bold border border-cyan-500/30 flex items-center gap-1.5">
-            <Gauge className="w-3.5 h-3.5 text-cyan-400" />
-            {isStopped ? '0.0' : capacityPerHour.toFixed(1)} Ton/Jam ({((capacityPerHour * 1000) / 60).toFixed(0)} kg/mnt)
+          <span className={`px-2.5 py-1 rounded font-bold border flex items-center gap-1.5 ${
+            isLunchBreak 
+              ? 'bg-amber-950/40 text-amber-300 border-amber-500/40' 
+              : isStopped 
+              ? 'bg-rose-950/40 text-rose-300 border-rose-500/40' 
+              : 'bg-slate-800 text-cyan-400 border-cyan-500/30'
+          }`}>
+            <Gauge className="w-3.5 h-3.5" />
+            {isLunchBreak ? '0.0 Ton/Jam (Standby)' : isStopped ? '0.0 Ton/Jam (Trip/Halt)' : `${capacityPerHour.toFixed(1)} Ton/Jam (${((capacityPerHour * 1000) / 60).toFixed(0)} kg/mnt)`}
           </span>
         </div>
       </div>

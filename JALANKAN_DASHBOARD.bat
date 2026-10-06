@@ -1,12 +1,12 @@
 @echo off
 setlocal
 cd /d "%~dp0"
-title SCADA Dashboard - PT. Pionir Nusantara Sukses
+title SCADA Dashboard - PT. Mineral Aditif Nusantara (Confidential Client)
 color 0A
 cls
 
 echo =======================================================================
-echo     DASHBOARD SCADA DAN SIMULATOR PABRIK - PT. PIONIR NUSANTARA SUKSES
+echo     DASHBOARD SCADA DAN SIMULATOR PABRIK - PT. MINERAL ADITIF NUSANTARA
 echo =======================================================================
 echo.
 echo Sedang menyiapkan dashboard, mohon tunggu sebentar...

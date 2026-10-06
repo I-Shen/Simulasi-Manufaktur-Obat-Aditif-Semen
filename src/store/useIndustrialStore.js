@@ -1,9 +1,10 @@
 import { create } from 'zustand';
 
 export const useIndustrialStore = create((set, get) => ({
-  // Operational Settings (PT. Pionir Nusantara Sukses Benchmark)
+  // Operational Settings (PT. Mineral Aditif Nusantara - Confidential Client Benchmark)
+  companyName: 'PT. Mineral Aditif Nusantara',
   capacityPerHour: 20, // Ton / Hour
-  shiftHours: 7, // Hours per shift
+  shiftHours: 7, // Effective working hours (8 hours total elapsed - 1 hour lunch break)
   workingDaysPerMonth: 25, // Days per month (10, 15, 20, 25, 30)
   fuelType: 'PGN', // 'PGN' (Default recommended) | 'CNG'
   sellingPricePerTon: 4350000, // Rp / Ton
@@ -15,14 +16,19 @@ export const useIndustrialStore = create((set, get) => ({
   // Simulation Status & Scenarios
   isRunning: true,
   activeBottleneck: 'none', // 'none' | 'truk_macet' | 'mesin_rusak' | 'lampu_mati'
-  downtimeHours: 0, // Simulated or selected downtime duration
+  downtimeHours: 0,
 
   // -------------------------------------------------------------------
-  // VIRTUAL TIME MACHINE & RUNTIME SCENARIO STATE
+  // VIRTUAL TIME MACHINE & RUNTIME SCENARIO STATE (08:30 - 16:30 with 1h Break)
   // -------------------------------------------------------------------
-  simulatedHour: 7.0, // Starts at 07:00 (7.0), up to 24.0 or next days
-  shiftStartHour: 7.0, // 07:00
-  timeMultiplier: 15, // 1x, 5x, 15x (default brisk), 60x (1s = 1min), 120x, 300x
+  simulatedHour: 8.5, // Starts at 08:30 (8.50)
+  shiftStartHour: 8.5, // 08:30 WIB
+  shiftEndHour: 16.5, // 16:30 WIB
+  breakStartHour: 12.0, // 12:00 WIB
+  breakEndHour: 13.0, // 13:00 WIB
+  isLunchBreak: false,
+  
+  timeMultiplier: 15, // Custom speed: 1x, 5x, 15x, 60x, 120x
   isClockRunning: true,
 
   // Stockpile & Storage Buffer Levels (in Tons)
@@ -36,17 +42,20 @@ export const useIndustrialStore = create((set, get) => ({
   trucksUnloadedToday: 1,
   trucksDispatchedToday: 0,
 
-  // Scheduled Logistic Milestones during Shift (07:00 - 14:00)
+  // Scheduled Logistic Milestones during Shift (08:30 - 16:30)
   scheduledEvents: [
-    { id: 1, hour: 7.25, timeStr: '07:15', type: 'inbound_bentonite', title: 'Truk 1 Bentonite Tiba (+30T)', material: 'Bentonite', tons: 30, completed: false },
-    { id: 2, hour: 8.5, timeStr: '08:30', type: 'inbound_bentonite', title: 'Truk 2 Bentonite Tiba (+30T)', material: 'Bentonite', tons: 30, completed: false },
-    { id: 3, hour: 9.0, timeStr: '09:00', type: 'outbound_dispatch', title: 'Rit 1 Pengiriman Silo Truk (-30T)', material: 'Produk Jadi', tons: 30, completed: false },
-    { id: 4, hour: 10.25, timeStr: '10:15', type: 'inbound_calcium', title: 'Truk Calsium Masuk (+30T)', material: 'Calsium', tons: 30, completed: false },
-    { id: 5, hour: 11.0, timeStr: '11:00', type: 'outbound_dispatch', title: 'Rit 2 Pengiriman Silo Truk (-30T)', material: 'Produk Jadi', tons: 30, completed: false },
-    { id: 6, hour: 11.75, timeStr: '11:45', type: 'inbound_bentonite', title: 'Truk 3 Bentonite Tiba (+30T)', material: 'Bentonite', tons: 30, completed: false },
-    { id: 7, hour: 13.0, timeStr: '13:00', type: 'outbound_dispatch', title: 'Rit 3 Pengiriman Silo Truk (-30T)', material: 'Produk Jadi', tons: 30, completed: false },
-    { id: 8, hour: 13.5, timeStr: '13:30', type: 'inbound_bentonite', title: 'Truk 4 Bentonite Tiba (+30T)', material: 'Bentonite', tons: 30, completed: false },
-    { id: 9, hour: 14.0, timeStr: '14:00', type: 'target_complete', title: 'Shift Berakhir (Target 140 Ton Selesai)', material: 'Target', tons: 140, completed: false }
+    { id: 1, hour: 8.5, timeStr: '08:30', type: 'shift_start', title: 'Shift Kerja Dimulai (08:30 WIB)', material: 'Shift', tons: 0, completed: true },
+    { id: 2, hour: 8.75, timeStr: '08:45', type: 'inbound_bentonite', title: 'Truk 1 Bentonite Tiba (+30T)', material: 'Bentonite', tons: 30, completed: false },
+    { id: 3, hour: 10.0, timeStr: '10:00', type: 'inbound_bentonite', title: 'Truk 2 Bentonite Tiba (+30T)', material: 'Bentonite', tons: 30, completed: false },
+    { id: 4, hour: 10.5, timeStr: '10:30', type: 'outbound_dispatch', title: 'Rit 1 Pengiriman Silo Truk (-30T)', material: 'Produk Jadi', tons: 30, completed: false },
+    { id: 5, hour: 11.5, timeStr: '11:30', type: 'inbound_calcium', title: 'Truk Calsium Masuk (+30T)', material: 'Calsium', tons: 30, completed: false },
+    { id: 6, hour: 12.0, timeStr: '12:00', type: 'break_time', title: '⏸️ Istirahat Siang 1 Jam (Mesin Standby)', material: 'Istirahat', tons: 0, completed: false },
+    { id: 7, hour: 13.0, timeStr: '13:00', type: 'resume_work', title: '▶️ Produksi Lanjutan Sesi Sore', material: 'Shift', tons: 0, completed: false },
+    { id: 8, hour: 13.25, timeStr: '13:15', type: 'inbound_bentonite', title: 'Truk 3 Bentonite Tiba (+30T)', material: 'Bentonite', tons: 30, completed: false },
+    { id: 9, hour: 14.0, timeStr: '14:00', type: 'outbound_dispatch', title: 'Rit 2 Pengiriman Silo Truk (-30T)', material: 'Produk Jadi', tons: 30, completed: false },
+    { id: 10, hour: 15.0, timeStr: '15:00', type: 'inbound_bentonite', title: 'Truk 4 Bentonite Tiba (+30T)', material: 'Bentonite', tons: 30, completed: false },
+    { id: 11, hour: 16.0, timeStr: '16:00', type: 'outbound_dispatch', title: 'Rit 3 Pengiriman Silo Truk (-30T)', material: 'Produk Jadi', tons: 30, completed: false },
+    { id: 12, hour: 16.5, timeStr: '16:30', type: 'target_complete', title: '🏁 Shift Selesai (Target 140 Ton Tercapai)', material: 'Target', tons: 140, completed: false }
   ],
 
   // -------------------------------------------------------------------
@@ -62,15 +71,27 @@ export const useIndustrialStore = create((set, get) => ({
   toggleClock: () => set((state) => ({ isClockRunning: !state.isClockRunning })),
   setTimeMultiplier: (speed) => set({ timeMultiplier: Number(speed) }),
   
-  // Scrub time directly (e.g. from slider 7.0 to 22.0)
+  // Scrub time directly using slider (08:30 s.d. 17:30)
   setSimulatedHour: (newHour) => {
     const s = get();
-    const clampedHour = Math.max(7.0, Math.min(24.0, Number(newHour)));
-    const elapsedHours = Math.max(0, clampedHour - s.shiftStartHour);
+    const clampedHour = Math.max(8.5, Math.min(20.0, Number(newHour)));
     
-    // Recalculate production and stocks proportionally to hour
+    // Calculate effective working hours considering 12:00 - 13:00 lunch break
+    let effectiveHours = 0;
+    const isBreak = clampedHour >= 12.0 && clampedHour < 13.0;
+
+    if (clampedHour <= 8.5) {
+      effectiveHours = 0;
+    } else if (clampedHour <= 12.0) {
+      effectiveHours = clampedHour - 8.5; // 0 to 3.5 hours
+    } else if (clampedHour < 13.0) {
+      effectiveHours = 3.5; // Frozen during 1h lunch break
+    } else {
+      effectiveHours = Math.min(7.0, 3.5 + (clampedHour - 13.0)); // Afternoon session up to 7h
+    }
+
     const rate = s.capacityPerHour;
-    const produced = Math.min(140, elapsedHours * rate);
+    const produced = effectiveHours * rate;
     
     // Update event completion status
     const updatedEvents = s.scheduledEvents.map((evt) => ({
@@ -80,11 +101,12 @@ export const useIndustrialStore = create((set, get) => ({
 
     set({
       simulatedHour: clampedHour,
+      isLunchBreak: isBreak,
       totalProducedShift: produced,
       scheduledEvents: updatedEvents,
-      // Stock adjusted based on production
-      bentoniteStock: Math.max(10, 134.4 - (produced * 0.8) + (clampedHour >= 8.5 ? 60 : clampedHour >= 7.25 ? 30 : 0)),
-      calciumStock: Math.max(20, 120.96 - (produced * 0.15) + (clampedHour >= 10.25 ? 30 : 0)),
+      // Dynamic stock levels
+      bentoniteStock: Math.max(10, 134.4 - (produced * 0.8) + (clampedHour >= 15.0 ? 120 : clampedHour >= 13.25 ? 90 : clampedHour >= 10.0 ? 60 : clampedHour >= 8.75 ? 30 : 0)),
+      calciumStock: Math.max(20, 120.96 - (produced * 0.15) + (clampedHour >= 11.5 ? 30 : 0)),
       siloStock: Math.min(86.4, Math.max(15, (produced % 30) + 25))
     });
   },
@@ -92,8 +114,9 @@ export const useIndustrialStore = create((set, get) => ({
   // Reset shift simulation
   resetSimulation: () => {
     set((state) => ({
-      simulatedHour: 7.0,
+      simulatedHour: 8.5,
       totalProducedShift: 0.0,
+      isLunchBreak: false,
       bentoniteStock: 134.4,
       calciumStock: 120.96,
       sodaAshStock: 35.0,
@@ -102,7 +125,7 @@ export const useIndustrialStore = create((set, get) => ({
       downtimeHours: 0,
       trucksUnloadedToday: 1,
       trucksDispatchedToday: 0,
-      scheduledEvents: state.scheduledEvents.map((e) => ({ ...e, completed: false }))
+      scheduledEvents: state.scheduledEvents.map((e, idx) => ({ ...e, completed: idx === 0 }))
     }));
   },
 
@@ -145,22 +168,28 @@ export const useIndustrialStore = create((set, get) => ({
   },
 
   // -------------------------------------------------------------------
-  // MAIN RUNTIME SIMULATION LOOP (Called every tick: deltaSeconds)
+  // MAIN RUNTIME SIMULATION LOOP
   // -------------------------------------------------------------------
   tickSimulation: (deltaSeconds = 0.1) => {
     const s = get();
     if (!s.isClockRunning || s.activeBottleneck !== 'none') return;
 
     // Convert real elapsed delta seconds to virtual hours using timeMultiplier
-    // e.g. 1 real second at 60x = 60 virtual seconds = 1/60 virtual hour
     const virtualHoursDelta = (deltaSeconds * s.timeMultiplier) / 3600;
     const nextHour = s.simulatedHour + virtualHoursDelta;
 
+    // Check if in Lunch Break (12:00 - 13:00)
+    const isNowBreak = nextHour >= 12.0 && nextHour < 13.0;
+    
+    // Stop production if beyond shift end (16:30) or during lunch break
+    const isShiftEnded = nextHour >= 16.5;
+    const canProduce = !isNowBreak && !isShiftEnded;
+
     // Production calculation in this step
-    const ratePerVirtualHour = s.capacityPerHour;
+    const ratePerVirtualHour = canProduce ? s.capacityPerHour : 0;
     const additionalProduction = virtualHoursDelta * ratePerVirtualHour;
     
-    const newProduced = s.totalProducedShift + additionalProduction;
+    const newProduced = Math.min(140, s.totalProducedShift + additionalProduction);
     const bentoniteConsumed = additionalProduction * 0.8;
     const calciumConsumed = additionalProduction * 0.15;
     const sodaConsumed = additionalProduction * 0.05;
@@ -198,9 +227,9 @@ export const useIndustrialStore = create((set, get) => ({
 
     const nextSilo = Math.min(86.4, Math.max(0, s.siloStock + additionalProduction - subtractedSilo));
 
-    // Stop at 24:00 or end of shift if reached
     set({
       simulatedHour: nextHour,
+      isLunchBreak: isNowBreak,
       totalProducedShift: newProduced,
       bentoniteStock: Math.min(134.4, nextBentonite),
       calciumStock: Math.min(120.96, Math.max(0, s.calciumStock - calciumConsumed + addedCalcium)),
@@ -218,7 +247,7 @@ export const useIndustrialStore = create((set, get) => ({
   getMetrics: () => {
     const s = get();
     const cap = s.capacityPerHour; // 20 T/h
-    const shift = s.shiftHours; // 7 Hours
+    const shift = s.shiftHours; // 7 Hours effective
     const days = s.workingDaysPerMonth; // 25 Days
 
     // Formatted time string
@@ -229,7 +258,7 @@ export const useIndustrialStore = create((set, get) => ({
 
     // Production Volumes
     const tonsPerHour = cap;
-    const tonsPerShift = cap * shift; // 140 Ton
+    const tonsPerShift = cap * shift; // 140 Ton (7 effective hours * 20)
     const tonsPerDay = tonsPerShift;
     const tonsPer10Days = tonsPerDay * 10; // 1,400 Ton
     const tonsPer20Days = tonsPerDay * 20; // 2,800 Ton
@@ -242,13 +271,8 @@ export const useIndustrialStore = create((set, get) => ({
     const rawMaterialCostPerTon = bentoniteCostPerTon + calciumCostPerTon + sodaAshCostPerTon; // Rp 3.582.500
 
     // Utility & Operational Costs (per Ton)
-    // Fuel: PGN $13.00/MMBTU (Rp 79.930/t) vs CNG $15.15/MMBTU (Rp 95.301/t)
     const fuelCostPerTon = s.fuelType === 'PGN' ? 79930 : 95301;
-    
-    // Electricity PLN (100 kW load at ~5 kWh/ton @ Rp 1.444,7 / kWh)
     const electricityCostPerTon = 7223;
-
-    // Forklift fuel (5 L/h solar @ Rp 18.950/L -> Rp 94.750/h / 20T = ~Rp 4.738/ton)
     const forkliftCostPerTon = 4738;
 
     // Labor: 10 manpower = Rp 66.875.000 / month
@@ -297,24 +321,26 @@ export const useIndustrialStore = create((set, get) => ({
     const calciumHoursLeft = (s.calciumStock / (cap * 0.15));
     const siloHoursUntilFull = Math.max(0, (86.4 - s.siloStock) / cap);
 
-    // Formatted exact depletion time
-    const bentoniteDepletionHour = s.simulatedHour + bentoniteHoursLeft;
+    // Formatted exact depletion time (accounting for lunch break if before 12:00)
+    let bentoniteDepletionHour = s.simulatedHour + bentoniteHoursLeft;
+    if (s.simulatedHour < 12.0 && bentoniteDepletionHour > 12.0) {
+      bentoniteDepletionHour += 1.0; // add 1 hour lunch break where no consumption occurs
+    }
     const bDH = Math.floor(bentoniteDepletionHour) % 24;
     const bDM = Math.floor((bentoniteDepletionHour - Math.floor(bentoniteDepletionHour)) * 60);
     const predictedDepletionTimeStr = `${String(bDH).padStart(2, '0')}:${String(bDM).padStart(2, '0')}`;
 
     // Formatted exact Silo full time
-    const siloFullHour = s.simulatedHour + siloHoursUntilFull;
+    let siloFullHour = s.simulatedHour + siloHoursUntilFull;
+    if (s.simulatedHour < 12.0 && siloFullHour > 12.0) {
+      siloFullHour += 1.0;
+    }
     const sFH = Math.floor(siloFullHour) % 24;
     const sFM = Math.floor((siloFullHour - Math.floor(siloFullHour)) * 60);
     const predictedSiloFullTimeStr = `${String(sFH).padStart(2, '0')}:${String(sFM).padStart(2, '0')}`;
 
-    // Target completion hour
-    const shiftHoursNeeded = (140 - s.totalProducedShift) / cap;
-    const targetDoneHour = s.simulatedHour + shiftHoursNeeded;
-    const tDH = Math.floor(targetDoneHour) % 24;
-    const tDM = Math.floor((targetDoneHour - Math.floor(targetDoneHour)) * 60);
-    const predictedShiftCompleteTimeStr = `${String(tDH).padStart(2, '0')}:${String(tDM).padStart(2, '0')}`;
+    // Target completion hour (Target 16:30 WIB)
+    const predictedShiftCompleteTimeStr = '16:30';
 
     // Downtime Financial Losses
     const idleLaborCostPerHour = totalLaborMonthly / (days * shift); // ~ Rp 382.143 / hr
