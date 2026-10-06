@@ -16,6 +16,7 @@ export const ProductionCycleCards = () => {
     capacityPerHour, 
     shiftHours, 
     workingDaysPerMonth,
+    totalProducedShift,
     totalProducedToday,
     getMetrics
   } = useIndustrialStore();
@@ -96,7 +97,7 @@ export const ProductionCycleCards = () => {
 
         <div className="flex items-center gap-2 text-slate-400">
           <Cpu className="w-3.5 h-3.5 text-cyan-400" />
-          <span>Produksi Hari Ini: <strong className="text-white">{totalProducedToday.toFixed(1)} Ton</strong></span>
+          <span>Produksi Hari Ini: <strong className="text-white">{(totalProducedShift ?? totalProducedToday ?? 0).toFixed(1)} Ton</strong></span>
         </div>
       </div>
     </div>

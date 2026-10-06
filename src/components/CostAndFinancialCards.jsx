@@ -38,7 +38,7 @@ export const CostAndFinancialCards = () => {
           {fuelType === 'PGN' ? (
             <span className="text-xs font-mono font-bold px-2.5 py-1 rounded bg-emerald-950/60 text-emerald-300 border border-emerald-500/40 flex items-center gap-1">
               <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-              Hemat PGN: +Rp {(m.monthlyPgnSavings / 1000000).toFixed(1)} Jt/Bln
+              Hemat PGN: +Rp {((m?.monthlyPgnSavings ?? 0) / 1000000).toFixed(1)} Jt/Bln
             </span>
           ) : (
             <span className="text-xs font-mono px-2.5 py-1 rounded bg-amber-950/40 text-amber-300 border border-amber-500/30">
@@ -56,12 +56,12 @@ export const CostAndFinancialCards = () => {
             HPP (Cost of Goods Sold)
           </span>
           <div className="text-xl lg:text-2xl font-mono font-bold text-white tracking-tight">
-            Rp {Math.round(m.hppPerTon).toLocaleString('id-ID')}
+            Rp {Math.round(m?.hppPerTon ?? 0).toLocaleString('id-ID')}
             <span className="text-xs font-normal text-slate-400"> / Ton</span>
           </div>
           <div className="mt-2 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px] font-mono">
             <span className="text-slate-400">Bahan Baku:</span>
-            <span className="text-slate-200 font-semibold">Rp {m.rawMaterialCostPerTon.toLocaleString('id-ID')} (96%)</span>
+            <span className="text-slate-200 font-semibold">Rp {(m?.rawMaterialCostPerTon ?? 0).toLocaleString('id-ID')} (96%)</span>
           </div>
         </div>
 
@@ -71,13 +71,13 @@ export const CostAndFinancialCards = () => {
             Harga Jual & Margin Kotor
           </span>
           <div className="text-xl lg:text-2xl font-mono font-bold text-cyan-400 tracking-tight">
-            Rp {sellingPricePerTon.toLocaleString('id-ID')}
+            Rp {(sellingPricePerTon ?? 0).toLocaleString('id-ID')}
             <span className="text-xs font-normal text-slate-400"> / Ton</span>
           </div>
           <div className="mt-2 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px] font-mono">
             <span className="text-slate-400">Gross Margin:</span>
             <span className="text-emerald-400 font-bold">
-              +{m.grossMarginPct.toFixed(1)}% (+Rp {Math.round(m.grossMarginPerTon).toLocaleString('id-ID')})
+              +{(m?.grossMarginPct ?? 0).toFixed(1)}% (+Rp {Math.round(m?.grossMarginPerTon ?? 0).toLocaleString('id-ID')})
             </span>
           </div>
         </div>
@@ -89,11 +89,11 @@ export const CostAndFinancialCards = () => {
             Laba Bersih Bulanan (50% Rule)
           </span>
           <div className="text-xl lg:text-2xl font-mono font-bold text-emerald-400 tracking-tight">
-            Rp {(m.monthlyNetProfit / 1000000000).toFixed(2)} Miliar
+            Rp {((m?.monthlyNetProfit ?? 0) / 1000000000).toFixed(2)} Miliar
           </div>
           <div className="mt-2 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px] font-mono">
             <span className="text-slate-400">Revenue Bulanan:</span>
-            <span className="text-slate-200 font-semibold">Rp {(m.monthlyRevenue / 1000000000).toFixed(2)} M</span>
+            <span className="text-slate-200 font-semibold">Rp {((m?.monthlyRevenue ?? 0) / 1000000000).toFixed(2)} M</span>
           </div>
         </div>
 
@@ -103,11 +103,11 @@ export const CostAndFinancialCards = () => {
             Periode Balik Modal (BEP)
           </span>
           <div className="text-xl lg:text-2xl font-mono font-bold text-amber-400 tracking-tight flex items-baseline gap-1.5">
-            {m.bepMonths.toFixed(1)} <span className="text-sm font-semibold text-slate-300">Bulan</span>
+            {(m?.bepMonths ?? 0).toFixed(1)} <span className="text-sm font-semibold text-slate-300">Bulan</span>
           </div>
           <div className="mt-2 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px] font-mono">
             <span className="text-slate-400">Basis Capex:</span>
-            <span className="text-slate-300 font-semibold">Rp {(capexInvestment / 1000000000).toFixed(2)} Miliar</span>
+            <span className="text-slate-300 font-semibold">Rp {((capexInvestment ?? 0) / 1000000000).toFixed(2)} Miliar</span>
           </div>
         </div>
       </div>

@@ -163,8 +163,8 @@ export const SCADAMimicDiagram = () => {
                   <span className="text-slate-400 flex items-center gap-1">
                     <Clock className="w-3 h-3 text-slate-500" /> Daya Tahan:
                   </span>
-                  <span className={`font-bold ${metrics.bentoniteHoursLeft < 3 ? 'text-red-400 animate-pulse' : 'text-slate-300'}`}>
-                    {metrics.bentoniteHoursLeft.toFixed(1)} Jam ({metrics.bentoniteHoursLeft < 8.4 ? 'DEPLESI' : 'AMAN'})
+                  <span className={`font-bold ${(metrics?.bentoniteHoursLeft ?? 10) < 3 ? 'text-red-400 animate-pulse' : 'text-slate-300'}`}>
+                    {(metrics?.bentoniteHoursLeft ?? 0).toFixed(1)} Jam ({(metrics?.bentoniteHoursLeft ?? 10) < 8.4 ? 'DEPLESI' : 'AMAN'})
                   </span>
                 </div>
               </div>
@@ -174,7 +174,7 @@ export const SCADAMimicDiagram = () => {
                 <div className="flex items-center justify-between text-xs mb-1">
                   <span className="text-slate-300 font-medium">Calsium (RM 2 - 6x6m)</span>
                   <span className="font-mono font-bold text-cyan-400">
-                    {calciumStock.toFixed(1)} / 120.9 T ({calciumPct}%)
+                    {(calciumStock ?? 0).toFixed(1)} / 120.9 T ({calciumPct}%)
                   </span>
                 </div>
                 <div className="w-full bg-slate-800 rounded-full h-3 p-0.5 overflow-hidden border border-slate-700">
@@ -188,7 +188,7 @@ export const SCADAMimicDiagram = () => {
                     <Clock className="w-3 h-3 text-slate-500" /> Daya Tahan:
                   </span>
                   <span className="font-bold text-slate-300">
-                    {metrics.calciumHoursLeft.toFixed(1)} Jam
+                    {(metrics?.calciumHoursLeft ?? 0).toFixed(1)} Jam
                   </span>
                 </div>
               </div>
@@ -315,7 +315,7 @@ export const SCADAMimicDiagram = () => {
                 <div className="flex items-center justify-between mt-1 text-[11px] font-mono text-slate-400">
                   <span>Penuh Dalam:</span>
                   <span className="font-bold text-slate-300">
-                    {metrics.siloHoursUntilFull > 0 ? `${metrics.siloHoursUntilFull.toFixed(1)} Jam` : 'PENUH!'}
+                    {(metrics?.siloHoursUntilFull ?? 0) > 0 ? `${(metrics?.siloHoursUntilFull ?? 0).toFixed(1)} Jam` : 'PENUH!'}
                   </span>
                 </div>
               </div>

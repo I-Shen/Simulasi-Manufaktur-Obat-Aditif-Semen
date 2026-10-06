@@ -13,10 +13,11 @@ export const TimeMachineControlPanel = () => {
     setSimulatedHour,
     resetSimulation,
     scheduledEvents,
-    activeBottleneck
+    activeBottleneck,
+    getMetrics
   } = useIndustrialStore();
 
-  const metrics = useIndustrialStore((state) => state.getMetrics());
+  const metrics = getMetrics();
 
   // Preset speed buttons
   const speeds = [
@@ -192,7 +193,7 @@ export const TimeMachineControlPanel = () => {
               Pukul {metrics.predictedDepletionTimeStr} WIB
             </div>
             <div className="text-[11px] text-slate-400 mt-0.5">
-              Sisa buffer: <span className="text-rose-400 font-semibold">{metrics.bentoniteHoursLeft.toFixed(1)} Jam kerja</span> jika pasokan truk terputus.
+              Sisa buffer: <span className="text-rose-400 font-semibold">{(metrics?.bentoniteHoursLeft ?? 0).toFixed(1)} Jam kerja</span> jika pasokan truk terputus.
             </div>
           </div>
         </div>
@@ -207,10 +208,10 @@ export const TimeMachineControlPanel = () => {
               Prediksi Bin Silo 72 m³ Penuh
             </div>
             <div className="text-lg font-bold font-mono text-amber-300">
-              Pukul {metrics.predictedSiloFullTimeStr} WIB
+              Pukul {metrics?.predictedSiloFullTimeStr ?? '14:30'} WIB
             </div>
             <div className="text-[11px] text-slate-400 mt-0.5">
-              Wajib dispatch armada truk dalam <span className="text-amber-400 font-semibold">{metrics.siloHoursUntilFull.toFixed(1)} Jam</span>.
+              Wajib dispatch armada truk dalam <span className="text-amber-400 font-semibold">{(metrics?.siloHoursUntilFull ?? 0).toFixed(1)} Jam</span>.
             </div>
           </div>
         </div>
@@ -225,10 +226,10 @@ export const TimeMachineControlPanel = () => {
               Target Shift 140 Ton Selesai
             </div>
             <div className="text-lg font-bold font-mono text-emerald-300">
-              Pukul {metrics.predictedShiftCompleteTimeStr} WIB
+              Pukul {metrics?.predictedShiftCompleteTimeStr ?? '16:30'} WIB
             </div>
             <div className="text-[11px] text-slate-400 mt-0.5">
-              Realisasi saat ini: <span className="text-emerald-400 font-semibold">{useIndustrialStore.getState().totalProducedShift.toFixed(1)} / 140 Ton</span>.
+              Realisasi saat ini: <span className="text-emerald-400 font-semibold">{((useIndustrialStore.getState()?.totalProducedShift ?? 0)).toFixed(1)} / 140 Ton</span>.
             </div>
           </div>
         </div>

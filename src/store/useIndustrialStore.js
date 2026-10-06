@@ -39,6 +39,7 @@ export const useIndustrialStore = create((set, get) => ({
 
   // Simulation Counters
   totalProducedShift: 0.0,
+  totalProducedToday: 0.0,
   trucksUnloadedToday: 1,
   trucksDispatchedToday: 0,
 
@@ -103,6 +104,7 @@ export const useIndustrialStore = create((set, get) => ({
       simulatedHour: clampedHour,
       isLunchBreak: isBreak,
       totalProducedShift: produced,
+      totalProducedToday: produced,
       scheduledEvents: updatedEvents,
       // Dynamic stock levels
       bentoniteStock: Math.max(10, 134.4 - (produced * 0.8) + (clampedHour >= 15.0 ? 120 : clampedHour >= 13.25 ? 90 : clampedHour >= 10.0 ? 60 : clampedHour >= 8.75 ? 30 : 0)),
@@ -116,6 +118,7 @@ export const useIndustrialStore = create((set, get) => ({
     set((state) => ({
       simulatedHour: 8.5,
       totalProducedShift: 0.0,
+      totalProducedToday: 0.0,
       isLunchBreak: false,
       bentoniteStock: 134.4,
       calciumStock: 120.96,
@@ -231,6 +234,7 @@ export const useIndustrialStore = create((set, get) => ({
       simulatedHour: nextHour,
       isLunchBreak: isNowBreak,
       totalProducedShift: newProduced,
+      totalProducedToday: newProduced,
       bentoniteStock: Math.min(134.4, nextBentonite),
       calciumStock: Math.min(120.96, Math.max(0, s.calciumStock - calciumConsumed + addedCalcium)),
       sodaAshStock: Math.max(0, s.sodaAshStock - sodaConsumed),
