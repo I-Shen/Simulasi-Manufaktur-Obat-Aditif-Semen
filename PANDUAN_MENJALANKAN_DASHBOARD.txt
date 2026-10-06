@@ -1,0 +1,84 @@
+================================================================================
+   PANDUAN PRAKTIS MENJALANKAN DASHBOARD SCADA & SIMULATOR PABRIK
+                PT. PIONIR NUSANTARA SUKSES
+================================================================================
+
+Yth. Bapak/Ibu Pimpinan,
+
+Aplikasi ini adalah Dashboard Digital Twin & Simulator Finansial Pabrik 
+(Kapasitas 20 Ton/jam, Efisiensi Bahan Baku, Bahan Bakar PGN vs CNG, 
+serta Mitigasi Kerugian Downtime).
+
+Berikut langkah mudah untuk membuka dan menjalankannya di laptop/komputer Anda:
+
+--------------------------------------------------------------------------------
+1. CARA PALING MUDAH (CUKUP 1 KLIK)
+--------------------------------------------------------------------------------
+1. Buka folder ini di File Explorer.
+2. Cari file bernama:
+   
+      👉  JALANKAN_DASHBOARD.bat  👈
+   
+3. Klik ganda (double-click) pada file tersebut.
+4. Jendela hitam (sistem) akan muncul, dan dalam beberapa detik browser 
+   (Chrome / Edge) Anda akan otomatis terbuka langsung menampilkan Dashboard.
+
+*Catatan: Jendela hitam tersebut jangan ditutup selama Anda melihat dashboard.
+
+
+--------------------------------------------------------------------------------
+2. ALAMAT WEBSITE DASHBOARD (JIKA BROWSER TIDAK TERBUKA OTOMATIS)
+--------------------------------------------------------------------------------
+Jika browser tidak terbuka dengan sendirinya, buka Google Chrome / Microsoft Edge,
+lalu salin dan tempel alamat berikut pada kolom URL di atas:
+
+      http://localhost:5173/
+
+
+--------------------------------------------------------------------------------
+3. CARA MANUAL (OPSIONAL - LEWAT TERMINAL / CMD)
+--------------------------------------------------------------------------------
+Jika ingin menjalankan secara manual:
+1. Buka folder ini.
+2. Klik pada kolom alamat folder di atas, ketik: cmd lalu tekan ENTER.
+3. Ketik perintah berikut lalu tekan ENTER:
+   
+      npm run dev
+
+4. Buka browser dan akses: http://localhost:5173/
+
+
+--------------------------------------------------------------------------------
+4. CARA MENUTUP / MEMATIKAN APLIKASI
+--------------------------------------------------------------------------------
+Jika sudah selesai menggunakan dashboard:
+- Cukup tutup jendela hitam (terminal) yang sedang berjalan, atau
+- Tekan tombol CTRL + C di jendela tersebut.
+
+
+--------------------------------------------------------------------------------
+5. FITUR UTAMA YANG BISA DICOBA LANGSUNG OLEH PIMPINAN
+--------------------------------------------------------------------------------
+Saat dashboard terbuka, Bapak/Ibu dapat langsung berinteraksi dengan:
+
+1. SLIDER HARGA JUAL & HARI KERJA (Bagian Kontrol Pabrik):
+   - Geser slider untuk melihat perubahan proyeksi Laba Bersih, Omzet, 
+     dan Break-Even Point (BEP) investasi Capex Rp 5,15 Miliar secara seketika.
+
+2. PERBANDINGAN ENERGI (CNG vs PGN):
+   - Klik tombol pilihan bahan bakar untuk melihat kalkulasi penghematan 
+     biaya hingga Rp 53,8 Juta per bulan jika menggunakan gas pipa PGN.
+
+3. SIMULATOR BOTTLENECK & DOWNTIME (Tombol Merah & Oranye di bawah):
+   - Klik tombol "Truk Macet"  : Melihat dampak keterlambatan suplai bahan baku.
+   - Klik tombol "Mesin Rusak" : Melihat alarm trip, penalti biaya reheat burner,
+                                 dan beban SDM menganggur per jam.
+   - Klik tombol "Lampu Mati"  : Simulasi total blackout dan prosedur darurat.
+   - Klik tombol "Normal Mode" : Mengembalikan pabrik beroperasi 100% normal.
+
+
+--------------------------------------------------------------------------------
+*SYARAT MINIMAL SISTEM:
+Laptop/PC perlu terpasang Node.js. Jika di laptop baru belum ada, cukup unduh 
+installer resminya di: https://nodejs.org/ (pilih versi LTS, instal cukup klik Next).
+================================================================================
