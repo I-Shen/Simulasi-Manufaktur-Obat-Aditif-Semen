@@ -10,7 +10,8 @@ import {
   ShieldCheck, 
   Factory, 
   Truck,
-  Zap
+  Zap,
+  FileSpreadsheet
 } from 'lucide-react';
 
 export const HeaderNavbar = () => {
@@ -86,6 +87,16 @@ export const HeaderNavbar = () => {
 
         {/* Global Action Controls */}
         <div className="flex items-center gap-2">
+          <a
+            href="./Database_Simulasi_SCADA_dan_Operasional.xlsx"
+            download="Database_Simulasi_SCADA_dan_Operasional_Revisi.xlsx"
+            className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-emerald-700/80 hover:bg-emerald-600 text-white transition border border-emerald-500/50 shadow-md"
+            title="Unduh Database Excel Hasil Revisi Final"
+          >
+            <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-200" />
+            <span className="hidden sm:inline">Unduh Excel Revisi</span>
+          </a>
+
           {hasAlarm && (
             <button 
               onClick={() => setBottleneck('none')}

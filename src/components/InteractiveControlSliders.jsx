@@ -133,7 +133,7 @@ export const InteractiveControlSliders = () => {
             >
               <span className="text-xs font-bold block">Gas CNG</span>
               <span className="text-[10px] font-mono text-slate-400 block">$15.15 / MMBTU</span>
-              <span className="text-[10px] font-mono text-orange-400 font-semibold block">Rp 95.301/T</span>
+              <span className="text-[10px] font-mono text-orange-400 font-semibold block">Rp 279.000/MMBTU</span>
             </button>
 
             <button
@@ -149,7 +149,7 @@ export const InteractiveControlSliders = () => {
                 <Sparkles className="w-3 h-3 text-emerald-400" />
               </div>
               <span className="text-[10px] font-mono text-slate-400 block">$13.00 / MMBTU</span>
-              <span className="text-[10px] font-mono text-emerald-400 font-semibold block">Rp 79.930/T (-16%)</span>
+              <span className="text-[10px] font-mono text-emerald-400 font-semibold block">Rp 234.000/MMBTU</span>
             </button>
           </div>
         </div>

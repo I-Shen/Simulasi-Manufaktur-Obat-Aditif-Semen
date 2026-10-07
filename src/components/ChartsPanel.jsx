@@ -146,7 +146,7 @@ export const ChartsPanel = () => {
           { value: Math.round(m.electricityCostPerTon), name: 'Listrik PLN 100kW', itemStyle: { color: '#a855f7' } },
           { value: Math.round(m.forkliftCostPerTon), name: 'Solar Forklift', itemStyle: { color: '#64748b' } },
           { value: Math.round(m.laborCostPerTon), name: 'SDM 10 Manpower', itemStyle: { color: '#3b82f6' } },
-          { value: Math.round(m.maintenanceCostPerTon), name: 'Maintenance (10%)', itemStyle: { color: '#ec4899' } }
+          { value: Math.round(m.maintenanceCostPerTon), name: 'Maintenance (Rp 139k/T)', itemStyle: { color: '#ec4899' } }
         ]
       }
     ]
@@ -155,8 +155,8 @@ export const ChartsPanel = () => {
   // 3. Financial Milestones Bar Chart (10, 15, 20, 25, 30 Days)
   const daysSteps = [10, 15, 20, 25, 30];
   const revData = daysSteps.map(d => Math.round((sellingPricePerTon * capacityPerHour * 7 * d) / 1000000000 * 100) / 100);
-  const costData = daysSteps.map(d => Math.round((m.hppPerTon * capacityPerHour * 7 * d) / 1000000000 * 100) / 100);
-  const netProfitData = daysSteps.map((d, i) => Math.round(((revData[i] - costData[i]) * 0.5) * 100) / 100);
+  const costData = daysSteps.map(d => Math.round(((m.baseHppPerTon + m.maintenanceCostPerTon) * capacityPerHour * 7 * d) / 1000000000 * 100) / 100);
+  const netProfitData = daysSteps.map(d => Math.round((m.grossMarginPerTon * capacityPerHour * 7 * d * 0.5) / 1000000000 * 100) / 100);
 
   const financialBarOption = {
     backgroundColor: 'transparent',

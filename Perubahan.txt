@@ -1,0 +1,6 @@
+1. Mengganti nama kolom (Penalti_reheat) menjadi (bahan_bakar_terbuang) pada sheet insiden_downtime_bottleneck
+2. Mengganti rumus pada perhitungan bahan_bakar_terbuang seperti : =F3*telemetri_produksi_scada!H3*master_bahan_baku!F11 pada sheet insiden_downtime_bottleneck
+3. Mengganti rumus kolom kehilangan_laba_margin_rp jadi seperti : =G3*biaya_siklus_hpp!N3 pada sheet insiden_downtime_bottleneck
+4. Mengganti variable pada kolom biaya_maintenance_per_ton_rp	total_hpp_per_ton_rp	harga_jual_per_ton_rp pada sheet biaya_siklus_hpp
+5. Mengganti rumus pada kolom gross_margin_per_ton_rp seperti : =M3-L3-K3 pada sheet biaya_siklus_hpp
+6. Mengganti Harga ID EN-PGN-09 dan EN-CNG-10 pada sheet master_bahan_baku

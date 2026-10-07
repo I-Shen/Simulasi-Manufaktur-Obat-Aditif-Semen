@@ -272,31 +272,39 @@ export const useIndustrialStore = create((set, get) => ({
     const bentoniteCostPerTon = 0.8 * 3650000; // Rp 2.920.000
     const calciumCostPerTon = 0.15 * 2750000; // Rp 412.500
     const sodaAshCostPerTon = 0.05 * 5000000; // Rp 250.000
-    const rawMaterialCostPerTon = bentoniteCostPerTon + calciumCostPerTon + sodaAshCostPerTon; // Rp 3.582.500
+    const rawMaterialCostPerTon = bentoniteCostPerTon + calciumCostPerTon + sodaAshCostPerTon; // Rp 3.582.500 (Matches Excel Col L total_hpp_per_ton_rp)
 
-    // Utility & Operational Costs (per Ton)
-    const fuelCostPerTon = s.fuelType === 'PGN' ? 79930 : 95301;
+    // Revised Fuel Pricing (Point 6: Master Bahan Baku)
+    // EN-PGN-09: Rp 234.000 / MMBTU ($13.00/MMBTU)
+    // EN-CNG-10: Rp 279.000 / MMBTU ($15.15/MMBTU)
+    // Telemetry average gas consumption: ~6.732 MMBTU/jam at 20 Ton/jam output (~0.3366 MMBTU/Ton)
+    const gasPricePerMmbtu = s.fuelType === 'PGN' ? 234000 : 279000;
+    const gasConsumptionMmbtuPerHour = 6.732 * (cap / 20); // Scale with capacity
+    const fuelCostPerTon = (gasConsumptionMmbtuPerHour / cap) * gasPricePerMmbtu; // ~Rp 78.764 (PGN) vs ~Rp 93.911 (CNG)
     const electricityCostPerTon = 7223;
     const forkliftCostPerTon = 4738;
 
-    // Labor: 10 manpower = Rp 66.875.000 / month
+    // Direct Labor: 10 manpower = Rp 66.875.000 / month
     const totalLaborMonthly = 66875000;
     const laborCostPerTon = tonsPerMonth > 0 ? totalLaborMonthly / tonsPerMonth : 0;
 
-    // Maintenance & Consumables (10% of operational)
-    const baseOpex = fuelCostPerTon + electricityCostPerTon + forkliftCostPerTon + laborCostPerTon;
-    const maintenanceCostPerTon = baseOpex * 0.1;
+    // Revised Maintenance Cost per Ton (Point 4: Biaya Siklus HPP Kolom K = Rp 139.006)
+    const maintenanceCostPerTon = 139006;
 
-    // Total Operational Cost (Opex) per Ton
-    const totalOpexPerTon = baseOpex + maintenanceCostPerTon;
+    // Operational Cost (Opex) per Ton
+    const operationalCostPerTon = fuelCostPerTon + electricityCostPerTon + forkliftCostPerTon + laborCostPerTon;
 
-    // Total Cost of Goods Sold (HPP) per Ton
-    const hppPerTon = rawMaterialCostPerTon + totalOpexPerTon;
+    // Total Cost of Goods Sold (HPP) per Ton according to Excel:
+    // In sheet biaya_siklus_hpp: Col L total_hpp_per_ton_rp is Rp 3.582.500 (Base Raw Material HPP)
+    // Maintenance is Col K = Rp 139.006
+    const baseHppPerTon = rawMaterialCostPerTon; // Rp 3.582.500
+    const fullCostPerTon = baseHppPerTon + maintenanceCostPerTon; // Rp 3.721.506
 
-    // Financial Revenues & Margins
-    const revenuePerTon = s.sellingPricePerTon;
-    const grossMarginPerTon = revenuePerTon - hppPerTon;
-    const grossMarginPct = revenuePerTon > 0 ? (grossMarginPerTon / revenuePerTon) * 100 : 0;
+    // Financial Revenues & Margins (Point 5: gross_margin_per_ton_rp = M3 - L3 - K3)
+    // Formula: Harga Jual (M3: 4.350.000) - HPP (L3: 3.582.500) - Maintenance (K3: 139.006) = Rp 628.494 / Ton
+    const revenuePerTon = s.sellingPricePerTon; // Rp 4.350.000
+    const grossMarginPerTon = revenuePerTon - baseHppPerTon - maintenanceCostPerTon; // Rp 628.494 / Ton
+    const grossMarginPct = revenuePerTon > 0 ? (grossMarginPerTon / revenuePerTon) * 100 : 0; // 14.45%
 
     // Monthly Figures
     const monthlyRevenue = revenuePerTon * tonsPerMonth;
@@ -305,20 +313,19 @@ export const useIndustrialStore = create((set, get) => ({
     const monthlyElectricityCost = electricityCostPerTon * tonsPerMonth;
     const monthlyForkliftCost = forkliftCostPerTon * tonsPerMonth;
     const monthlyMaintenanceCost = maintenanceCostPerTon * tonsPerMonth;
-    const monthlyTotalOpex = totalOpexPerTon * tonsPerMonth;
-    const monthlyHppTotal = hppPerTon * tonsPerMonth;
+    const monthlyTotalOpex = (operationalCostPerTon + maintenanceCostPerTon) * tonsPerMonth;
+    const monthlyHppTotal = baseHppPerTon * tonsPerMonth;
 
-    const monthlyGrossProfit = monthlyRevenue - monthlyHppTotal;
-    
-    // Net profit after corporate overhead & tax (50%)
-    const monthlyNetProfit = monthlyGrossProfit * 0.5;
+    // Monthly Gross Profit & Net Profit (50% Rule for overhead/tax)
+    const monthlyGrossProfit = grossMarginPerTon * tonsPerMonth; // 3,500 T * 628,494 = Rp 2,199,729,000
+    const monthlyNetProfit = monthlyGrossProfit * 0.5; // Rp 1,099,864,500
 
     // Break Even Point (BEP) in Months for Capex Rp 5,15 Miliar
     const bepMonths = monthlyNetProfit > 0 ? s.capexInvestment / monthlyNetProfit : 999;
 
     // PGN Savings vs CNG (Monthly & Per Ton)
-    const fuelSavingsPerTon = 95301 - 79930; // Rp 15.371 / Ton
-    const monthlyPgnSavings = fuelSavingsPerTon * tonsPerMonth; // ~ Rp 53.8 Million / Month
+    const fuelSavingsPerTon = (0.3366 * 279000) - (0.3366 * 234000); // Rp 15.147 / Ton
+    const monthlyPgnSavings = fuelSavingsPerTon * tonsPerMonth; // ~Rp 53.0 Million / Month
 
     // Depletion Timeframes & Predictive Timestamps
     const bentoniteHoursLeft = (s.bentoniteStock / (cap * 0.8));
@@ -328,7 +335,7 @@ export const useIndustrialStore = create((set, get) => ({
     // Formatted exact depletion time (accounting for lunch break if before 12:00)
     let bentoniteDepletionHour = s.simulatedHour + bentoniteHoursLeft;
     if (s.simulatedHour < 12.0 && bentoniteDepletionHour > 12.0) {
-      bentoniteDepletionHour += 1.0; // add 1 hour lunch break where no consumption occurs
+      bentoniteDepletionHour += 1.0;
     }
     const bDH = Math.floor(bentoniteDepletionHour) % 24;
     const bDM = Math.floor((bentoniteDepletionHour - Math.floor(bentoniteDepletionHour)) * 60);
@@ -346,12 +353,31 @@ export const useIndustrialStore = create((set, get) => ({
     // Target completion hour (Target 16:30 WIB)
     const predictedShiftCompleteTimeStr = '16:30';
 
-    // Downtime Financial Losses
-    const idleLaborCostPerHour = totalLaborMonthly / (days * shift); // ~ Rp 382.143 / hr
-    const lostGrossProfitPerHour = grossMarginPerTon * cap;
-    const wastedReheatCost = s.downtimeHours > 0 ? (s.fuelType === 'PGN' ? 17215390 : 20500000) : 0;
-    const totalDowntimeLoss = s.downtimeHours * (idleLaborCostPerHour + lostGrossProfitPerHour) + wastedReheatCost;
+    // -------------------------------------------------------------------
+    // REVISED DOWNTIME BOTTLENECK LOSS FORMULAS (Points 1, 2, 3)
+    // -------------------------------------------------------------------
+    // 1. Output Hilang (Ton): durasi_jam * capacityPerHour
     const lostTonnage = s.downtimeHours * cap;
+
+    // 2. Biaya SDM Menganggur (Rp): durasi_jam * (totalLaborMonthly / (days * shift))
+    // Standard hourly labor rate = 66,875,000 / (25 * 7) = Rp 382,143 / jam
+    const idleLaborCostPerHour = totalLaborMonthly / (days * shift);
+    const biayaSdmMenganggur = s.downtimeHours * idleLaborCostPerHour;
+
+    // 3. Bahan Bakar Terbuang (Rp) (Point 1 & 2):
+    // Formula: = durasi_jam * telemetri_produksi_scada!H3 * master_bahan_baku!F11
+    // telemetri_produksi_scada!H3 = ~6.732 MMBTU/jam
+    // master_bahan_baku!F11 = Rp 234.000 / MMBTU (PGN) or Rp 279.000 (CNG)
+    const bahanBakarTerbuang = s.downtimeHours * gasConsumptionMmbtuPerHour * gasPricePerMmbtu;
+
+    // 4. Kehilangan Laba Margin (Rp) (Point 3):
+    // Formula: = output_hilang_ton * biaya_siklus_hpp!N3
+    // biaya_siklus_hpp!N3 = Rp 628.494 / Ton (Gross Margin per Ton)
+    const kehilanganLabaMargin = lostTonnage * grossMarginPerTon;
+
+    // 5. Total Kerugian Downtime (Rp):
+    // Formula: = SUM(biaya_sdm_menganggur_rp + bahan_bakar_terbuang_rp + kehilangan_laba_margin_rp)
+    const totalDowntimeLoss = biayaSdmMenganggur + bahanBakarTerbuang + kehilanganLabaMargin;
 
     return {
       formattedSimTime,
@@ -367,8 +393,10 @@ export const useIndustrialStore = create((set, get) => ({
       forkliftCostPerTon,
       laborCostPerTon,
       maintenanceCostPerTon,
-      totalOpexPerTon,
-      hppPerTon,
+      operationalCostPerTon,
+      baseHppPerTon,
+      fullCostPerTon,
+      hppPerTon: baseHppPerTon,
       revenuePerTon,
       grossMarginPerTon,
       grossMarginPct,
@@ -391,11 +419,15 @@ export const useIndustrialStore = create((set, get) => ({
       predictedDepletionTimeStr,
       predictedSiloFullTimeStr,
       predictedShiftCompleteTimeStr,
+      // Downtime loss breakdown matching revised Excel
+      lostTonnage,
       idleLaborCostPerHour,
-      lostGrossProfitPerHour,
-      wastedReheatCost,
+      biayaSdmMenganggur,
+      bahanBakarTerbuang,
+      kehilanganLabaMargin,
       totalDowntimeLoss,
-      lostTonnage
+      gasPricePerMmbtu,
+      gasConsumptionMmbtuPerHour
     };
   }
 }));

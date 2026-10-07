@@ -53,31 +53,36 @@ export const CostAndFinancialCards = () => {
         {/* Card 1: HPP / Ton */}
         <div className="bg-slate-950/70 border border-slate-800 rounded-lg p-4">
           <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider block mb-1">
-            HPP (Cost of Goods Sold)
+            Total HPP Bahan Baku (Col L)
           </span>
           <div className="text-xl lg:text-2xl font-mono font-bold text-white tracking-tight">
-            Rp {Math.round(m?.hppPerTon ?? 0).toLocaleString('id-ID')}
+            Rp {Math.round(m?.baseHppPerTon ?? 3582500).toLocaleString('id-ID')}
             <span className="text-xs font-normal text-slate-400"> / Ton</span>
           </div>
           <div className="mt-2 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px] font-mono">
-            <span className="text-slate-400">Bahan Baku:</span>
-            <span className="text-slate-200 font-semibold">Rp {(m?.rawMaterialCostPerTon ?? 0).toLocaleString('id-ID')} (96%)</span>
+            <span className="text-slate-400">Maintenance (Col K):</span>
+            <span className="text-amber-400 font-semibold">Rp {(m?.maintenanceCostPerTon ?? 139006).toLocaleString('id-ID')} / T</span>
           </div>
         </div>
 
         {/* Card 2: Selling Price & Margin */}
         <div className="bg-slate-950/70 border border-slate-800 rounded-lg p-4">
-          <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider block mb-1">
-            Harga Jual & Margin Kotor
-          </span>
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-[11px] font-mono text-slate-400 uppercase tracking-wider block">
+              Harga Jual & Margin Kotor
+            </span>
+            <span className="text-[9px] px-1 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-mono">
+              Revisi Col N
+            </span>
+          </div>
           <div className="text-xl lg:text-2xl font-mono font-bold text-cyan-400 tracking-tight">
-            Rp {(sellingPricePerTon ?? 0).toLocaleString('id-ID')}
+            Rp {(sellingPricePerTon ?? 4350000).toLocaleString('id-ID')}
             <span className="text-xs font-normal text-slate-400"> / Ton</span>
           </div>
           <div className="mt-2 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px] font-mono">
-            <span className="text-slate-400">Gross Margin:</span>
+            <span className="text-slate-400">Gross Margin (=M-L-K):</span>
             <span className="text-emerald-400 font-bold">
-              +{(m?.grossMarginPct ?? 0).toFixed(1)}% (+Rp {Math.round(m?.grossMarginPerTon ?? 0).toLocaleString('id-ID')})
+              +{(m?.grossMarginPct ?? 14.45).toFixed(2)}% (+Rp {Math.round(m?.grossMarginPerTon ?? 628494).toLocaleString('id-ID')})
             </span>
           </div>
         </div>
@@ -92,8 +97,8 @@ export const CostAndFinancialCards = () => {
             Rp {((m?.monthlyNetProfit ?? 0) / 1000000000).toFixed(2)} Miliar
           </div>
           <div className="mt-2 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px] font-mono">
-            <span className="text-slate-400">Revenue Bulanan:</span>
-            <span className="text-slate-200 font-semibold">Rp {((m?.monthlyRevenue ?? 0) / 1000000000).toFixed(2)} M</span>
+            <span className="text-slate-400">Gross Profit (3.500T):</span>
+            <span className="text-slate-200 font-semibold">Rp {((m?.monthlyGrossProfit ?? 0) / 1000000000).toFixed(2)} M</span>
           </div>
         </div>
 
@@ -140,7 +145,7 @@ export const CostAndFinancialCards = () => {
               <td className="py-2 px-3 text-slate-300 flex items-center gap-1.5">
                 <Flame className="w-3.5 h-3.5 text-amber-400" /> Energi Burner Gas ({fuelType})
               </td>
-              <td className="py-2 px-3 text-right">Rp {m.fuelCostPerTon.toLocaleString('id-ID')}</td>
+              <td className="py-2 px-3 text-right">Rp {Math.round(m.fuelCostPerTon).toLocaleString('id-ID')}</td>
               <td className="py-2 px-3 text-right">Rp {(m.fuelCostPerTon * 140 / 1000000).toFixed(1)} Jt</td>
               <td className="py-2 px-3 text-right">Rp {(m.fuelCostPerTon * 1400 / 1000000).toFixed(1)} Jt</td>
               <td className="py-2 px-3 text-right">Rp {(m.fuelCostPerTon * 2800 / 1000000).toFixed(1)} Jt</td>
@@ -166,13 +171,33 @@ export const CostAndFinancialCards = () => {
               <td className="py-2 px-3 text-right">Rp 66,88 Jt</td>
               <td className="py-2 px-3 text-right font-bold bg-cyan-950/20">Rp 66,88 Jt</td>
             </tr>
+            <tr className="bg-amber-950/20 border-t border-amber-900/30">
+              <td className="py-2 px-3 text-amber-300 font-semibold flex items-center gap-1.5">
+                <Wrench className="w-3.5 h-3.5 text-amber-400" /> Biaya Maintenance per Ton (Revisi Col K)
+              </td>
+              <td className="py-2 px-3 text-right text-amber-300 font-bold">Rp {m.maintenanceCostPerTon.toLocaleString('id-ID')}</td>
+              <td className="py-2 px-3 text-right text-amber-300">Rp {(m.maintenanceCostPerTon * 140 / 1000000).toFixed(1)} Jt</td>
+              <td className="py-2 px-3 text-right text-amber-300">Rp {(m.maintenanceCostPerTon * 1400 / 1000000).toFixed(1)} Jt</td>
+              <td className="py-2 px-3 text-right text-amber-300">Rp {(m.maintenanceCostPerTon * 2800 / 1000000).toFixed(1)} Jt</td>
+              <td className="py-2 px-3 text-right font-bold text-amber-200 bg-amber-950/40">Rp {(m.maintenanceCostPerTon * 3500 / 1000000).toFixed(1)} Jt</td>
+            </tr>
             <tr className="bg-slate-900/90 font-bold border-t-2 border-slate-700">
-              <td className="py-2.5 px-3 text-white">TOTAL BIAYA HPP (CGS)</td>
-              <td className="py-2.5 px-3 text-right text-cyan-400">Rp {Math.round(m.hppPerTon).toLocaleString('id-ID')}</td>
-              <td className="py-2.5 px-3 text-right text-white">Rp {(m.hppPerTon * 140 / 1000000).toFixed(1)} Jt</td>
-              <td className="py-2.5 px-3 text-right text-white">Rp {(m.hppPerTon * 1400 / 1000000000).toFixed(2)} M</td>
-              <td className="py-2.5 px-3 text-right text-white">Rp {(m.hppPerTon * 2800 / 1000000000).toFixed(2)} M</td>
-              <td className="py-2.5 px-3 text-right text-cyan-300 bg-cyan-950/40">Rp {(m.hppPerTon * 3500 / 1000000000).toFixed(2)} M</td>
+              <td className="py-2.5 px-3 text-white">TOTAL HPP BAHAN BAKU (COL L)</td>
+              <td className="py-2.5 px-3 text-right text-cyan-400">Rp {Math.round(m.baseHppPerTon).toLocaleString('id-ID')}</td>
+              <td className="py-2.5 px-3 text-right text-white">Rp {(m.baseHppPerTon * 140 / 1000000).toFixed(1)} Jt</td>
+              <td className="py-2.5 px-3 text-right text-white">Rp {(m.baseHppPerTon * 1400 / 1000000000).toFixed(2)} M</td>
+              <td className="py-2.5 px-3 text-right text-white">Rp {(m.baseHppPerTon * 2800 / 1000000000).toFixed(2)} M</td>
+              <td className="py-2.5 px-3 text-right text-cyan-300 bg-cyan-950/40">Rp {(m.baseHppPerTon * 3500 / 1000000000).toFixed(2)} M</td>
+            </tr>
+            <tr className="bg-emerald-950/30 font-bold border-t border-emerald-900/50">
+              <td className="py-2.5 px-3 text-emerald-300 flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-emerald-400" /> GROSS MARGIN (= Harga Jual - HPP - Maint)
+              </td>
+              <td className="py-2.5 px-3 text-right text-emerald-400">+Rp {Math.round(m.grossMarginPerTon).toLocaleString('id-ID')}</td>
+              <td className="py-2.5 px-3 text-right text-emerald-300">+Rp {(m.grossMarginPerTon * 140 / 1000000).toFixed(1)} Jt</td>
+              <td className="py-2.5 px-3 text-right text-emerald-300">+Rp {(m.grossMarginPerTon * 1400 / 1000000000).toFixed(2)} M</td>
+              <td className="py-2.5 px-3 text-right text-emerald-300">+Rp {(m.grossMarginPerTon * 2800 / 1000000000).toFixed(2)} M</td>
+              <td className="py-2.5 px-3 text-right text-emerald-200 bg-emerald-950/60">+Rp {(m.grossMarginPerTon * 3500 / 1000000000).toFixed(2)} M</td>
             </tr>
           </tbody>
         </table>

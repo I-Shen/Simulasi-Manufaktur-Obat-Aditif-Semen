@@ -39,8 +39,8 @@ export function App() {
         {/* Top Confidential Notice Banner */}
         <div className="bg-slate-900/60 border border-slate-800 rounded-lg px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs">
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded bg-red-950 text-red-400 font-bold border border-red-800/60 font-mono text-[10px]">
-              CONFIDENTIAL DATA
+            <span className="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 font-bold border border-emerald-800/60 font-mono text-[10px]">
+              DATA EXCEL TERBARU (REVISI FINAL)
             </span>
             <span className="text-slate-300 font-medium">
               Data Model: Kapasitas Area Storage & Trafic Material (Bulk Mixing & Drying Raw Material)
@@ -52,7 +52,9 @@ export function App() {
             <span>•</span>
             <span>Target Produksi: <strong>3.500 Ton / Bulan</strong></span>
             <span>•</span>
-            <span className="text-cyan-400">Time-Machine Simulation Active</span>
+            <span className="text-emerald-400 font-semibold">Margin Kotor: Rp 628.494/T (14,45%)</span>
+            <span>•</span>
+            <span className="text-cyan-400">Database Synced</span>
           </div>
         </div>
 
