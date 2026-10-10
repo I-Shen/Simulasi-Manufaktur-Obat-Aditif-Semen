@@ -1,6 +1,15 @@
 import { create } from 'zustand';
+import { TRIAL_SCENARIOS } from '../data/trialScenariosData';
 
 export const useIndustrialStore = create((set, get) => ({
+  // -------------------------------------------------------------------
+  // SYSTEM MODE: 'normal' (Baseline Excel Asli) vs 'trial' (Kasus Ekstrim Excel Baru)
+  // -------------------------------------------------------------------
+  appMode: 'normal', // 'normal' | 'trial'
+  trialScenario: 'SCN-06', // Default extreme scenario for Trial Mode: Megaproject PSN 24H (420T)
+  isJumboBagBufferActive: false, // Staging Buffer 1 Ton Jumbo Bag (PK-JMB-07)
+  isWetSeasonBurnerOverload: false, // Wet Season 35% moisture overload on burner
+
   // Operational Settings (PT. Mineral Aditif Nusantara - Confidential Client Benchmark)
   companyName: 'PT. Mineral Aditif Nusantara',
   capacityPerHour: 20, // Ton / Hour
@@ -62,6 +71,53 @@ export const useIndustrialStore = create((set, get) => ({
   // -------------------------------------------------------------------
   // ACTIONS & TIME CONTROLLERS
   // -------------------------------------------------------------------
+  setAppMode: (mode) => {
+    if (mode === 'normal') {
+      // Revert completely to baseline 1-shift unmodified Excel data
+      set({
+        appMode: 'normal',
+        capacityPerHour: 20,
+        shiftHours: 7,
+        workingDaysPerMonth: 25,
+        fuelType: 'PGN',
+        sellingPricePerTon: 4350000,
+        bentoniteStock: 134.4,
+        calciumStock: 120.96,
+        siloStock: 42.0,
+        isJumboBagBufferActive: false,
+        isWetSeasonBurnerOverload: false,
+        activeBottleneck: 'none',
+        downtimeHours: 0
+      });
+    } else {
+      // Switch to Trial Extreme Stress-Test Mode
+      const scen = TRIAL_SCENARIOS['SCN-06'];
+      set({
+        appMode: 'trial',
+        trialScenario: 'SCN-06',
+        capacityPerHour: 20,
+        shiftHours: scen ? scen.hours : 21,
+        workingDaysPerMonth: 25,
+        isJumboBagBufferActive: false,
+        isWetSeasonBurnerOverload: false
+      });
+    }
+  },
+
+  setTrialScenario: (code) => {
+    const scen = TRIAL_SCENARIOS[code];
+    if (scen) {
+      set({
+        trialScenario: code,
+        shiftHours: scen.hours,
+        capacityPerHour: 20
+      });
+    }
+  },
+
+  toggleJumboBagBuffer: () => set((state) => ({ isJumboBagBufferActive: !state.isJumboBagBufferActive })),
+  toggleWetSeasonOverload: () => set((state) => ({ isWetSeasonBurnerOverload: !state.isWetSeasonBurnerOverload })),
+
   setCapacityPerHour: (val) => set({ capacityPerHour: Number(val) }),
   setWorkingDays: (val) => set({ workingDaysPerMonth: Number(val) }),
   setFuelType: (type) => set({ fuelType: type }),
@@ -250,8 +306,11 @@ export const useIndustrialStore = create((set, get) => ({
   // -------------------------------------------------------------------
   getMetrics: () => {
     const s = get();
+    const isTrial = s.appMode === 'trial';
+    const trialScen = TRIAL_SCENARIOS[s.trialScenario] || TRIAL_SCENARIOS['SCN-06'];
+
     const cap = s.capacityPerHour; // 20 T/h
-    const shift = s.shiftHours; // 7 Hours effective
+    const shift = isTrial ? trialScen.hours : s.shiftHours; // 7 Hours effective (normal) or trial hours
     const days = s.workingDaysPerMonth; // 25 Days
 
     // Formatted time string
@@ -262,77 +321,73 @@ export const useIndustrialStore = create((set, get) => ({
 
     // Production Volumes
     const tonsPerHour = cap;
-    const tonsPerShift = cap * shift; // 140 Ton (7 effective hours * 20)
+    const tonsPerShift = isTrial ? trialScen.dailyOutput : cap * shift; // 140 Ton (normal) vs trial daily output
     const tonsPerDay = tonsPerShift;
-    const tonsPer10Days = tonsPerDay * 10; // 1,400 Ton
-    const tonsPer20Days = tonsPerDay * 20; // 2,800 Ton
-    const tonsPerMonth = tonsPerShift * days; // 3,500 Ton (25 days) s.d. 4,200 Ton (30 days)
+    const tonsPer10Days = tonsPerDay * 10;
+    const tonsPer20Days = tonsPerDay * 20;
+    const tonsPerMonth = isTrial ? trialScen.monthlyOutput : tonsPerShift * days; // 3,500 Ton (normal) vs trial monthly
 
     // Raw Material Formulation Costs (per Ton)
     const bentoniteCostPerTon = 0.8 * 3650000; // Rp 2.920.000
     const calciumCostPerTon = 0.15 * 2750000; // Rp 412.500
     const sodaAshCostPerTon = 0.05 * 5000000; // Rp 250.000
-    const rawMaterialCostPerTon = bentoniteCostPerTon + calciumCostPerTon + sodaAshCostPerTon; // Rp 3.582.500 (Matches Excel Col L total_hpp_per_ton_rp)
+    const rawMaterialCostPerTon = bentoniteCostPerTon + calciumCostPerTon + sodaAshCostPerTon; // Rp 3.582.500
 
-    // Revised Fuel Pricing (Point 6: Master Bahan Baku)
-    // EN-PGN-09: Rp 234.000 / MMBTU ($13.00/MMBTU)
-    // EN-CNG-10: Rp 279.000 / MMBTU ($15.15/MMBTU)
-    // Telemetry average gas consumption: ~6.732 MMBTU/jam at 20 Ton/jam output (~0.3366 MMBTU/Ton)
+    // Gas Pricing
     const gasPricePerMmbtu = s.fuelType === 'PGN' ? 234000 : 279000;
-    const gasConsumptionMmbtuPerHour = 6.732 * (cap / 20); // Scale with capacity
-    const fuelCostPerTon = (gasConsumptionMmbtuPerHour / cap) * gasPricePerMmbtu; // ~Rp 78.764 (PGN) vs ~Rp 93.911 (CNG)
+    // Wet season overload: burner consumes 18% more gas to evaporate excess 35% moisture
+    const burnerOverloadMultiplier = s.isWetSeasonBurnerOverload ? 1.18 : 1.0;
+    const gasConsumptionMmbtuPerHour = 6.732 * (cap / 20) * burnerOverloadMultiplier;
+    const fuelCostPerTon = (gasConsumptionMmbtuPerHour / cap) * gasPricePerMmbtu;
     const electricityCostPerTon = 7223;
     const forkliftCostPerTon = 4738;
 
-    // Direct Labor: 10 manpower = Rp 66.875.000 / month
-    const totalLaborMonthly = 66875000;
+    // Direct Labor
+    const totalLaborMonthly = isTrial ? (trialScen.sdmCostDaily * days) : 66875000;
     const laborCostPerTon = tonsPerMonth > 0 ? totalLaborMonthly / tonsPerMonth : 0;
 
-    // Revised Maintenance Cost per Ton (Point 4: Biaya Siklus HPP Kolom K = Rp 139.006)
+    // Maintenance Cost
     const maintenanceCostPerTon = 139006;
 
     // Operational Cost (Opex) per Ton
     const operationalCostPerTon = fuelCostPerTon + electricityCostPerTon + forkliftCostPerTon + laborCostPerTon;
 
-    // Total Cost of Goods Sold (HPP) per Ton according to Excel:
-    // In sheet biaya_siklus_hpp: Col L total_hpp_per_ton_rp is Rp 3.582.500 (Base Raw Material HPP)
-    // Maintenance is Col K = Rp 139.006
+    // Base HPP per Ton
     const baseHppPerTon = rawMaterialCostPerTon; // Rp 3.582.500
-    const fullCostPerTon = baseHppPerTon + maintenanceCostPerTon; // Rp 3.721.506
+    const fullCostPerTon = isTrial ? trialScen.hppPerTon : (baseHppPerTon + maintenanceCostPerTon);
 
-    // Financial Revenues & Margins (Point 5: gross_margin_per_ton_rp = M3 - L3 - K3)
-    // Formula: Harga Jual (M3: 4.350.000) - HPP (L3: 3.582.500) - Maintenance (K3: 139.006) = Rp 628.494 / Ton
+    // Financial Revenues & Margins
     const revenuePerTon = s.sellingPricePerTon; // Rp 4.350.000
-    const grossMarginPerTon = revenuePerTon - baseHppPerTon - maintenanceCostPerTon; // Rp 628.494 / Ton
-    const grossMarginPct = revenuePerTon > 0 ? (grossMarginPerTon / revenuePerTon) * 100 : 0; // 14.45%
+    const grossMarginPerTon = revenuePerTon - baseHppPerTon - maintenanceCostPerTon;
+    const grossMarginPct = isTrial ? trialScen.grossMarginPct : (revenuePerTon > 0 ? (grossMarginPerTon / revenuePerTon) * 100 : 0);
 
     // Monthly Figures
-    const monthlyRevenue = revenuePerTon * tonsPerMonth;
+    const monthlyRevenue = isTrial ? (trialScen.revenueDaily * days) : (revenuePerTon * tonsPerMonth);
     const monthlyRawMaterialCost = rawMaterialCostPerTon * tonsPerMonth;
     const monthlyFuelCost = fuelCostPerTon * tonsPerMonth;
     const monthlyElectricityCost = electricityCostPerTon * tonsPerMonth;
     const monthlyForkliftCost = forkliftCostPerTon * tonsPerMonth;
     const monthlyMaintenanceCost = maintenanceCostPerTon * tonsPerMonth;
     const monthlyTotalOpex = (operationalCostPerTon + maintenanceCostPerTon) * tonsPerMonth;
-    const monthlyHppTotal = baseHppPerTon * tonsPerMonth;
+    const monthlyHppTotal = isTrial ? (trialScen.hppDaily * days) : (baseHppPerTon * tonsPerMonth);
 
-    // Monthly Gross Profit & Net Profit (50% Rule for overhead/tax)
-    const monthlyGrossProfit = grossMarginPerTon * tonsPerMonth; // 3,500 T * 628,494 = Rp 2,199,729,000
-    const monthlyNetProfit = monthlyGrossProfit * 0.5; // Rp 1,099,864,500
+    // Monthly Gross Profit & Net Profit
+    const monthlyGrossProfit = isTrial ? trialScen.monthlyGrossProfit : (grossMarginPerTon * tonsPerMonth);
+    const monthlyNetProfit = monthlyGrossProfit * 0.5;
 
     // Break Even Point (BEP) in Months for Capex Rp 5,15 Miliar
     const bepMonths = monthlyNetProfit > 0 ? s.capexInvestment / monthlyNetProfit : 999;
 
-    // PGN Savings vs CNG (Monthly & Per Ton)
-    const fuelSavingsPerTon = (0.3366 * 279000) - (0.3366 * 234000); // Rp 15.147 / Ton
-    const monthlyPgnSavings = fuelSavingsPerTon * tonsPerMonth; // ~Rp 53.0 Million / Month
+    // PGN Savings vs CNG
+    const fuelSavingsPerTon = (0.3366 * 279000) - (0.3366 * 234000);
+    const monthlyPgnSavings = fuelSavingsPerTon * tonsPerMonth;
 
     // Depletion Timeframes & Predictive Timestamps
     const bentoniteHoursLeft = (s.bentoniteStock / (cap * 0.8));
     const calciumHoursLeft = (s.calciumStock / (cap * 0.15));
     const siloHoursUntilFull = Math.max(0, (86.4 - s.siloStock) / cap);
 
-    // Formatted exact depletion time (accounting for lunch break if before 12:00)
+    // Formatted exact depletion time
     let bentoniteDepletionHour = s.simulatedHour + bentoniteHoursLeft;
     if (s.simulatedHour < 12.0 && bentoniteDepletionHour > 12.0) {
       bentoniteDepletionHour += 1.0;
@@ -350,36 +405,20 @@ export const useIndustrialStore = create((set, get) => ({
     const sFM = Math.floor((siloFullHour - Math.floor(siloFullHour)) * 60);
     const predictedSiloFullTimeStr = `${String(sFH).padStart(2, '0')}:${String(sFM).padStart(2, '0')}`;
 
-    // Target completion hour (Target 16:30 WIB)
-    const predictedShiftCompleteTimeStr = '16:30';
+    // Target completion hour
+    const predictedShiftCompleteTimeStr = isTrial ? `${trialScen.hours}:00 WIB` : '16:30';
 
-    // -------------------------------------------------------------------
-    // REVISED DOWNTIME BOTTLENECK LOSS FORMULAS (Points 1, 2, 3)
-    // -------------------------------------------------------------------
-    // 1. Output Hilang (Ton): durasi_jam * capacityPerHour
+    // Downtime Bottleneck Loss
     const lostTonnage = s.downtimeHours * cap;
-
-    // 2. Biaya SDM Menganggur (Rp): durasi_jam * (totalLaborMonthly / (days * shift))
-    // Standard hourly labor rate = 66,875,000 / (25 * 7) = Rp 382,143 / jam
     const idleLaborCostPerHour = totalLaborMonthly / (days * shift);
     const biayaSdmMenganggur = s.downtimeHours * idleLaborCostPerHour;
-
-    // 3. Bahan Bakar Terbuang (Rp) (Point 1 & 2):
-    // Formula: = durasi_jam * telemetri_produksi_scada!H3 * master_bahan_baku!F11
-    // telemetri_produksi_scada!H3 = ~6.732 MMBTU/jam
-    // master_bahan_baku!F11 = Rp 234.000 / MMBTU (PGN) or Rp 279.000 (CNG)
     const bahanBakarTerbuang = s.downtimeHours * gasConsumptionMmbtuPerHour * gasPricePerMmbtu;
-
-    // 4. Kehilangan Laba Margin (Rp) (Point 3):
-    // Formula: = output_hilang_ton * biaya_siklus_hpp!N3
-    // biaya_siklus_hpp!N3 = Rp 628.494 / Ton (Gross Margin per Ton)
     const kehilanganLabaMargin = lostTonnage * grossMarginPerTon;
-
-    // 5. Total Kerugian Downtime (Rp):
-    // Formula: = SUM(biaya_sdm_menganggur_rp + bahan_bakar_terbuang_rp + kehilangan_laba_margin_rp)
     const totalDowntimeLoss = biayaSdmMenganggur + bahanBakarTerbuang + kehilanganLabaMargin;
 
     return {
+      isTrial,
+      trialScenarioData: trialScen,
       formattedSimTime,
       tonsPerHour,
       tonsPerShift,
@@ -396,7 +435,7 @@ export const useIndustrialStore = create((set, get) => ({
       operationalCostPerTon,
       baseHppPerTon,
       fullCostPerTon,
-      hppPerTon: baseHppPerTon,
+      hppPerTon: isTrial ? trialScen.hppPerTon : baseHppPerTon,
       revenuePerTon,
       grossMarginPerTon,
       grossMarginPct,
@@ -419,7 +458,6 @@ export const useIndustrialStore = create((set, get) => ({
       predictedDepletionTimeStr,
       predictedSiloFullTimeStr,
       predictedShiftCompleteTimeStr,
-      // Downtime loss breakdown matching revised Excel
       lostTonnage,
       idleLaborCostPerHour,
       biayaSdmMenganggur,
