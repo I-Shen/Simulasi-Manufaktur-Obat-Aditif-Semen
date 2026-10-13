@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skema Kerjasama & Bagi Hasil — Investasi Produksi PCO (Minyak)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-page: #0f172a;
+      --card-bg: #ffffff;
+      --navy-dark: #0c2b53;
+      --navy-blue: #143e72;
+      --teal-primary: #0a6358;
+      --teal-light: #e0f2f1;
+      --green-leaf: #22c55e;
+      --green-dark: #15803d;
+      --green-mint: #d1fae5;
+      --amber-note: #d97706;
+      --amber-bg: #fffbeb;
+      --blue-accent: #0284c7;
+      --blue-soft: #e0f2fe;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --border-soft: #cbd5e1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #090d16;
+      color: var(--text-main);
+      padding: 16px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    /* Top Navigation Toolbar */
+    .toolbar-nav {
+      max-width: 1440px;
+      width: 100%;
+      background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      padding: 10px 18px;
+      margin-bottom: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: #e2e8f0;
+      font-size: 13px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    .toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .slide-tabs {
+      display: inline-flex;
+      background: rgba(2, 6, 23, 0.6);
+      padding: 3px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      gap: 4px;
+    }
+
+    .tab-link {
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #94a3b8;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tab-link:hover {
+      color: #f8fafc;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .tab-link.active {
+      color: #ffffff;
+      background: linear-gradient(135deg, #0a6358, #059669);
+      box-shadow: 0 2px 8px rgba(10, 99, 88, 0.4);
+    }
+
+    .badge-live {
+      background: #059669;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .badge-live::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #34d399;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.3); }
+    }
+
+    .toolbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 7px 12px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .btn-scada {
+      background: rgba(30, 41, 59, 0.8);
+      color: #cbd5e1;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-scada:hover {
+      background: #334155;
+      color: #fff;
+    }
+
+    .btn-excel {
+      background: #059669;
+      color: #ffffff;
+      border: 1px solid #10b981;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-excel:hover {
+      background: #047857;
+      transform: translateY(-1px);
+    }
+
+    /* Main Infographic Board Canvas */
+    .infographic-canvas {
+      max-width: 1440px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #cbd5e1;
+    }
+
+    /* TOP HEADER BANNER */
+    .header-banner {
+      background: #ffffff;
+      border-bottom: 2px solid #e2e8f0;
+      padding: 16px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .header-title-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .leaf-logo {
+      width: 44px;
+      height: 44px;
+      flex-shrink: 0;
+    }
+
+    .header-titles h1 {
+      font-size: 24px;
+      font-weight: 900;
+      color: #0c2b53;
+      letter-spacing: -0.5px;
+      line-height: 1.15;
+    }
+
+    .header-titles h2 {
+      font-size: 24px;
+      font-weight: 900;
+      color: #0a6358;
+      letter-spacing: -0.5px;
+      line-height: 1.15;
+    }
+
+    .header-titles p {
+      font-size: 13px;
+      font-weight: 600;
+      color: #475569;
+      margin-top: 3px;
+    }
+
+    /* Center Quote */
+    .header-center-quote {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border-left: 2px solid #e2e8f0;
+      padding-left: 18px;
+    }
+
+    .quote-content {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: #0c2b53;
+      line-height: 1.35;
+    }
+
+    .quote-content span {
+      display: block;
+      color: #0a6358;
+      font-weight: 800;
+    }
+
+    /* Header Right (Clean Energy Tanks & Brand) */
+    .header-right-media {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .tanks-render-box {
+      width: 140px;
+      height: 60px;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid #94a3b8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pco-brand-box {
+      border-left: 2px solid #e2e8f0;
+      padding-left: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pco-brand-box .brand-name {
+      font-size: 20px;
+      font-weight: 900;
+      color: #0c2b53;
+      line-height: 1;
+    }
+
+    .pco-brand-box .brand-tag {
+      font-size: 9px;
+      font-weight: 800;
+      color: #0a6358;
+      letter-spacing: 0.5px;
+      line-height: 1.2;
+    }
+
+    .pco-brand-box .brand-sub {
+      font-size: 8px;
+      font-weight: 600;
+      color: #64748b;
+      margin-top: 2px;
+    }
+
+    /* 3-COLUMN MAIN GRID */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 310px 1fr 340px;
+      gap: 16px;
+      padding: 18px 24px;
+      background: #f8fafc;
+      flex: 1;
+    }
+
+    @media (max-width: 1200px) {
+      .main-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .col-right {
+        grid-column: span 2;
+      }
+    }
+
+    @media (max-width: 860px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+      .col-right {
+        grid-column: span 1;
+      }
+    }
+
+    /* SECTION CARD STYLES */
+    .section-card {
+      background: #ffffff;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      overflow: hidden;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      margin-bottom: 14px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .section-card:last-child {
+      margin-bottom: 0;
+    }
+
+    .section-header {
+      padding: 8px 12px;
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-transform: uppercase;
+    }
+
+    .section-header.navy {
+      background: #0c2b53;
+    }
+
+    .section-header.teal {
+      background: #0a6358;
+    }
+
+    .badge-number {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #ffffff;
+      color: #0c2b53;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .section-header.teal .badge-number {
+      color: #0a6358;
+    }
+
+    .section-body {
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 11.5px;
+    }
+
+    /* SECTION 1: PARA PIHAK CARDS */
+    .parties-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .party-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 8px 10px;
+    }
+
+    .party-card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      padding-bottom: 6px;
+      border-bottom: 1px dashed #cbd5e1;
+    }
+
+    .party-icon-circle {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .party-icon-circle.green {
+      background: #d1fae5;
+      color: #059669;
+    }
+
+    .party-icon-circle.blue {
+      background: #dbeafe;
+      color: #0284c7;
+    }
+
+    .party-title-text h4 {
+      font-size: 9.5px;
+      font-weight: 800;
+      color: #64748b;
+      letter-spacing: 0.5px;
+      line-height: 1.1;
+    }
+
+    .party-title-text h3 {
+      font-size: 11.5px;
+      font-weight: 900;
+      color: #0c2b53;
+      line-height: 1.2;
+    }
+
+    .party-role-tag {
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 12px;
+      margin-left: auto;
+    }
+
+    .party-role-tag.pemodal {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .party-role-tag.pengelola {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .party-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .party-bullets li {
+      font-size: 10px;
+      color: #334155;
+      display: flex;
+      align-items: flex-start;
+      gap: 5px;
+      line-height: 1.25;
+    }
+
+    .party-bullets li::before {
+      content: '•';
+      color: #0284c7;
+      font-weight: 900;
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    .party-card:first-child .party-bullets li::before {
+      color: #059669;
+    }
+
+    /* SECTION 2 & 4 TABLES */
+    .table-custom {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+
+    .table-custom th {
+      background: #f1f5f9;
+      color: #475569;
+      font-weight: 800;
+      padding: 5px 8px;
+      text-align: left;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .table-custom td {
+      padding: 5px 8px;
+      border-bottom: 1px solid #f1f5f9;
+      color: #1e293b;
+    }
+
+    .table-custom tr:last-child td {
+      border-bottom: none;
+    }
+
+    .highlight-row-mint {
+      background: #d1fae5 !important;
+      font-weight: 800;
+      color: #065f46 !important;
+    }
+
+    .highlight-row-blue {
+      background: #dbeafe !important;
+      font-weight: 800;
+      color: #1e40af !important;
+    }
+
+    .highlight-row-slate {
+      background: #f1f5f9 !important;
+      font-weight: 800;
+      color: #0f172a !important;
+    }
+
+    /* SECTION 3: KEPEMILIKAN ASET */
+    .asset-ownership-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 4px;
+    }
+
+    .asset-icon-box {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: #e0f2fe;
+      color: #0284c7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .asset-text-left {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #0f172a;
+      line-height: 1.3;
+      border-right: 1px solid #cbd5e1;
+      padding-right: 10px;
+      flex: 1;
+    }
+
+    .asset-text-right {
+      font-size: 10px;
+      color: #475569;
+      line-height: 1.3;
+      flex: 1;
+    }
+
+    /* SECTION 5: DONUT CHART & BREAKDOWN */
+    .donut-layout {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 4px;
+    }
+
+    .donut-visual {
+      position: relative;
+      width: 130px;
+      height: 130px;
+      flex-shrink: 0;
+    }
+
+    .donut-visual svg {
+      transform: rotate(-90deg);
+      width: 100%;
+      height: 100%;
+    }
+
+    .donut-center-label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .donut-center-label .lbl-eat {
+      font-size: 9px;
+      font-weight: 800;
+      color: #64748b;
+      letter-spacing: 0.5px;
+    }
+
+    .donut-center-label .lbl-num {
+      font-size: 12.5px;
+      font-weight: 900;
+      color: #0c2b53;
+      font-family: 'JetBrains Mono', monospace;
+      line-height: 1.1;
+    }
+
+    .donut-center-label .lbl-per {
+      font-size: 8px;
+      font-weight: 700;
+      color: #059669;
+    }
+
+    .share-breakdown {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .share-pill {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .share-pill.green-border {
+      border-left: 4px solid #059669;
+      background: #f0fdf4;
+    }
+
+    .share-pill.blue-border {
+      border-left: 4px solid #0284c7;
+      background: #f0f9ff;
+    }
+
+    .share-pct-badge {
+      font-size: 14px;
+      font-weight: 900;
+      font-family: 'JetBrains Mono', monospace;
+      line-height: 1;
+    }
+
+    .share-pct-badge.green {
+      color: #059669;
+    }
+
+    .share-pct-badge.blue {
+      color: #0284c7;
+    }
+
+    .share-details h4 {
+      font-size: 11.5px;
+      font-weight: 900;
+      color: #0f172a;
+      font-family: 'JetBrains Mono', monospace;
+      line-height: 1.1;
+    }
+
+    .share-details p {
+      font-size: 9.5px;
+      font-weight: 700;
+      color: #475569;
+      line-height: 1.1;
+    }
+
+    .share-details span {
+      font-size: 8.5px;
+      color: #64748b;
+    }
+
+    /* RIGHT COLUMN: SECTION 6, 7 & NOTES */
+    .flow-steps-h {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4px;
+      padding: 6px 0;
+    }
+
+    .flow-step-circle {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 4px;
+      flex: 1;
+    }
+
+    .flow-circle-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #0c2b53;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 6px -1px rgba(12, 43, 83, 0.3);
+      border: 2px solid #ffffff;
+    }
+
+    .flow-circle-label {
+      font-size: 8.5px;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.1;
+      max-width: 60px;
+    }
+
+    .flow-circle-sub {
+      font-size: 7.5px;
+      font-weight: 700;
+      color: #059669;
+    }
+
+    .flow-arrow-div {
+      color: #94a3b8;
+      font-size: 14px;
+      font-weight: 900;
+      margin-top: -14px;
+    }
+
+    /* SECTION 7: MANFAAT KERJASAMA */
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .benefit-card {
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .benefit-header {
+      padding: 5px 8px;
+      font-size: 9.5px;
+      font-weight: 900;
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .benefit-header.green {
+      background: #059669;
+    }
+
+    .benefit-header.blue {
+      background: #0284c7;
+    }
+
+    .benefit-list {
+      list-style: none;
+      padding: 6px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      background: #ffffff;
+      flex: 1;
+    }
+
+    .benefit-list li {
+      font-size: 9.5px;
+      color: #334155;
+      display: flex;
+      align-items: flex-start;
+      gap: 5px;
+      line-height: 1.25;
+    }
+
+    .benefit-list li svg {
+      width: 12px;
+      height: 12px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .benefit-card:first-child .benefit-list li svg {
+      color: #059669;
+    }
+
+    .benefit-card:last-child .benefit-list li svg {
+      color: #0284c7;
+    }
+
+    /* CATATAN PENTING */
+    .notes-box {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      border-left: 4px solid #d97706;
+      border-radius: 8px;
+      padding: 8px 10px;
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .notes-icon {
+      width: 18px;
+      height: 18px;
+      color: #d97706;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .notes-body h4 {
+      font-size: 10px;
+      font-weight: 900;
+      color: #b45309;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+
+    .notes-body ol {
+      padding-left: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      font-size: 9px;
+      color: #78350f;
+      line-height: 1.3;
+    }
+
+    /* FOOTER BANNER */
+    .footer-banner {
+      background: #ffffff;
+      border-top: 2px solid #e2e8f0;
+      padding: 12px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer-left h4 {
+      font-size: 13px;
+      font-weight: 900;
+      color: #0c2b53;
+      letter-spacing: 0.3px;
+      line-height: 1.1;
+    }
+
+    .footer-left p {
+      font-size: 11px;
+      font-weight: 800;
+      color: #059669;
+    }
+
+    .footer-pillars {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .footer-pill-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10.5px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+
+    .footer-pill-item svg {
+      width: 16px;
+      height: 16px;
+      color: #0284c7;
+    }
+
+    .footer-right-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .footer-right-brand .pco-brand-txt {
+      font-size: 16px;
+      font-weight: 900;
+      color: #0c2b53;
+      line-height: 1;
+    }
+
+    .footer-right-brand .pco-brand-sub {
+      font-size: 8px;
+      font-weight: 800;
+      color: #059669;
+      letter-spacing: 0.5px;
+    }
+
+    /* PAYBACK HIGHLIGHT BADGE IN FOOTER */
+    .payback-tag {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-weight: 800;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation & Slide Switcher Toolbar -->
+  <div class="toolbar-nav">
+    <div class="toolbar-left">
+      <div class="slide-tabs">
+        <a href="./" class="tab-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Slide 1: Proposal Investasi
+        </a>
+        <a href="./kerjasama.html" class="tab-link active">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Slide 2: Skema Kerjasama & Bagi Hasil
+        </a>
+      </div>
+      <span class="badge-live">DATA RESMI REVISI</span>
+    </div>
+
+    <div class="toolbar-actions">
+      <a href="../" class="btn-action btn-scada">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Kembali ke SCADA Pabrik Semen
+      </a>
+      <a href="Simulasi_Investasi_dan_Produksi_PCO.xlsx" download class="btn-action btn-excel">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+        Unduh Excel Model Lengkap (.xlsx)
+      </a>
+    </div>
+  </div>
+
+  <!-- Main Infographic Board matching Screenshot Layout -->
+  <div class="infographic-canvas">
+
+    <!-- HEADER BANNER -->
+    <header class="header-banner">
+      <div class="header-title-group">
+        <svg class="leaf-logo" viewBox="0 0 100 100" fill="none">
+          <path d="M20 80 C 15 45, 45 20, 85 15 C 80 55, 55 80, 20 80 Z" fill="#22c55e"/>
+          <path d="M20 80 C 35 60, 60 40, 85 15" stroke="#15803d" stroke-width="4" stroke-linecap="round"/>
+          <path d="M15 85 C 10 65, 25 50, 50 45 C 45 70, 30 85, 15 85 Z" fill="#84cc16"/>
+        </svg>
+        <div class="header-titles">
+          <h1>SKEMA KERJASAMA & BAGI HASIL</h1>
+          <h2>INVESTASI PRODUKSI PCO (MINYAK)</h2>
+          <p>Sinergi Modal dan Operasional untuk Nilai Berkelanjutan</p>
+        </div>
+      </div>
+
+      <!-- Center Quote -->
+      <div class="header-center-quote">
+        <div class="quote-content">
+          Dari Limbah<br>
+          Menjadi Energi,<br>
+          <span>Menuju Masa Depan Lebih Bersih</span>
+        </div>
+      </div>
+
+      <!-- Right Industrial Graphic & Brand -->
+      <div class="header-right-media">
+        <!-- Clean Energy Tanks SVG Graphic -->
+        <div class="tanks-render-box" title="Fasilitas Tangki Bersih PCO">
+          <svg viewBox="0 0 140 60" fill="none" style="width: 100%; height: 100%;">
+            <defs>
+              <linearGradient id="tankGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#475569"/>
+                <stop offset="40%" stop-color="#94a3b8"/>
+                <stop offset="70%" stop-color="#cbd5e1"/>
+                <stop offset="100%" stop-color="#475569"/>
+              </linearGradient>
+              <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#0284c7"/>
+                <stop offset="100%" stop-color="#bae6fd"/>
+              </linearGradient>
+            </defs>
+            <rect width="140" height="60" fill="url(#skyGrad)" opacity="0.25"/>
+            <!-- Concrete base -->
+            <rect y="50" width="140" height="10" fill="#334155"/>
+            <!-- Tank 1 (Main) -->
+            <rect x="25" y="16" width="38" height="34" rx="2" fill="url(#tankGrad)"/>
+            <ellipse cx="44" cy="16" rx="19" ry="4" fill="#cbd5e1"/>
+            <rect x="30" y="28" width="28" height="8" rx="2" fill="#0f172a" opacity="0.7"/>
+            <text x="44" y="34" fill="#38bdf8" font-size="5" font-weight="900" text-anchor="middle" font-family="sans-serif">PCO</text>
+            <text x="44" y="38" fill="#ffffff" font-size="3" font-weight="700" text-anchor="middle" font-family="sans-serif">CLEAN ENERGY</text>
+            <!-- Tank 2 (Left) -->
+            <rect x="2" y="24" width="22" height="26" rx="2" fill="url(#tankGrad)" opacity="0.9"/>
+            <ellipse cx="13" cy="24" rx="11" ry="3" fill="#cbd5e1"/>
+            <!-- Tank 3 (Right) -->
+            <rect x="67" y="20" width="28" height="30" rx="2" fill="url(#tankGrad)"/>
+            <ellipse cx="81" cy="20" rx="14" ry="3" fill="#cbd5e1"/>
+            <!-- Tank 4 (Far Right) -->
+            <rect x="99" y="25" width="20" height="25" rx="2" fill="url(#tankGrad)" opacity="0.85"/>
+            <!-- Piping Network -->
+            <path d="M13 35 h14 v15 M44 40 h37 v10 M81 38 h28 v12" stroke="#64748b" stroke-width="1.5" fill="none"/>
+          </svg>
+        </div>
+
+        <div class="pco-brand-box">
+          <svg width="28" height="28" viewBox="0 0 100 100" fill="none">
+            <path d="M20 80 C 15 45, 45 20, 85 15 C 80 55, 55 80, 20 80 Z" fill="#22c55e"/>
+            <path d="M20 80 C 35 60, 60 40, 85 15" stroke="#15803d" stroke-width="4"/>
+          </svg>
+          <div>
+            <div class="brand-name">PCO</div>
+            <div class="brand-tag">MINYAK ALTERNATIF<br>UNTUK INDUSTRI</div>
+            <div class="brand-sub">Solusi Nyata Lingkungan & Nilai Ekonomi</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 3-COLUMN MAIN BODY -->
+    <main class="main-grid">
+
+      <!-- LEFT COLUMN: (1) PARA PIHAK, (2) NILAI INVESTASI, (3) KEPEMILIKAN ASET -->
+      <div class="col-left">
+
+        <!-- (1) PARA PIHAK -->
+        <section class="section-card">
+          <div class="section-header navy">
+            <span class="badge-number">1</span>
+            <span>PARA PIHAK</span>
+          </div>
+          <div class="section-body">
+            <div class="parties-container">
+              <!-- PIHAK PERTAMA -->
+              <div class="party-card">
+                <div class="party-card-header">
+                  <div class="party-icon-circle green">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                  </div>
+                  <div class="party-title-text">
+                    <h4>PIHAK PERTAMA</h4>
+                    <h3>PT PIONER NUSANTARA SUKSES</h3>
+                  </div>
+                  <span class="party-role-tag pemodal">Pemodal</span>
+                </div>
+                <ul class="party-bullets">
+                  <li>Menanggung biaya investasi (Capex Rp5,00 Miliar)</li>
+                  <li>Pemilik sah 100% alat/mesin & fasilitas gudang</li>
+                  <li><strong>Berhak atas 60% EAT</strong> (Laba Bersih Setelah Pajak)</li>
+                  <li>Tidak terlibat operasional harian pabrik</li>
+                </ul>
+              </div>
+
+              <!-- PIHAK KEDUA -->
+              <div class="party-card">
+                <div class="party-card-header">
+                  <div class="party-icon-circle blue">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                  </div>
+                  <div class="party-title-text">
+                    <h4>PIHAK KEDUA</h4>
+                    <h3>PT. RANDU AGUNG BERSAUDARA</h3>
+                  </div>
+                  <span class="party-role-tag pengelola">Pengelola Operasional</span>
+                </div>
+                <ul class="party-bullets">
+                  <li>Mengelola operasional produksi (21 jam/hari)</li>
+                  <li>Mengurus perizinan, legalitas, & AMDAL</li>
+                  <li>Menanggung operasional & teknis harian</li>
+                  <li><strong>Berhak atas 40% EAT</strong> (Laba Bersih Setelah Pajak)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- (2) NILAI INVESTASI (SESUAI SLIDE SEBELUMNYA) -->
+        <section class="section-card">
+          <div class="section-header teal">
+            <span class="badge-number">2</span>
+            <span>NILAI INVESTASI (SESUAI SLIDE SEBELUMNYA)</span>
+          </div>
+          <div class="section-body" style="padding: 4px;">
+            <table class="table-custom">
+              <thead>
+                <tr>
+                  <th>Komponen</th>
+                  <th style="text-align: right;">Nilai (Rp)</th>
+                  <th>Keterangan</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="font-weight: 700;">4 Unit Mesin Produksi</td>
+                  <td style="text-align: right; font-family: 'JetBrains Mono', monospace; font-weight: 800;">3.600.000.000</td>
+                  <td style="font-size: 9.5px; color: #475569;">Milik Pihak Pertama</td>
+                </tr>
+                <tr>
+                  <td style="font-weight: 700;">Pembangunan & Fasilitas</td>
+                  <td style="text-align: right; font-family: 'JetBrains Mono', monospace; font-weight: 800;">1.400.000.000</td>
+                  <td style="font-size: 9.5px; color: #475569;">Infrastruktur (tangki, utilitas, dll)</td>
+                </tr>
+                <tr class="highlight-row-mint">
+                  <td>Total Investasi</td>
+                  <td style="text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 900;">5.000.000.000</td>
+                  <td style="font-size: 9.5px;">100% Pihak Pertama</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- (3) KEPEMILIKAN ASET -->
+        <section class="section-card">
+          <div class="section-header navy">
+            <span class="badge-number">3</span>
+            <span>KEPEMILIKAN ASET</span>
+          </div>
+          <div class="section-body">
+            <div class="asset-ownership-box">
+              <div class="asset-icon-box">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+              </div>
+              <div class="asset-text-left">
+                Seluruh alat/mesin produksi merupakan milik <strong>Pihak Pertama (PT Pioner Nusantara Sukses)</strong>.
+              </div>
+              <div class="asset-text-right">
+                Pihak Kedua hanya berhak menggunakan alat sesuai perjanjian kerjasama. <strong>Tidak ada perpindahan kepemilikan aset.</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- CENTER COLUMN: (4) ILUSTRASI KINERJA KEUANGAN & (5) PEMBAGIAN LABA -->
+      <div class="col-center">
+
+        <!-- (4) ILUSTRASI KINERJA KEUANGAN (PER BULAN) -->
+        <section class="section-card">
+          <div class="section-header teal">
+            <span class="badge-number">4</span>
+            <span>ILUSTRASI KINERJA KEUANGAN (PER BULAN)</span>
+          </div>
+          <div class="section-body" style="padding: 4px;">
+            <table class="table-custom">
+              <thead>
+                <tr>
+                  <th>Uraian</th>
+                  <th style="text-align: center;">Volume / Harga</th>
+                  <th style="text-align: right;">Nilai (Rp)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                    Produksi PCO
+                  </td>
+                  <td style="text-align: center; font-weight: 700; color: #0f172a;">520.000 kg (± 520,00 ton)</td>
+                  <td style="text-align: right; color: #94a3b8;">-</td>
+                </tr>
+                <tr>
+                  <td style="font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/></svg>
+                    Harga jual rata-rata
+                  </td>
+                  <td style="text-align: center; font-weight: 700; color: #0284c7;">Rp8.300/kg</td>
+                  <td style="text-align: right; font-family: 'JetBrains Mono', monospace; font-weight: 700;">4.316.000.000</td>
+                </tr>
+                <tr class="highlight-row-blue">
+                  <td style="font-weight: 900; display: flex; align-items: center; gap: 6px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                    Omzet per bulan
+                  </td>
+                  <td style="text-align: center; font-size: 10px; font-weight: 700;">Top-Line Revenue</td>
+                  <td style="text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 900;">Rp4.316.000.000</td>
+                </tr>
+                <tr>
+                  <td style="font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    Biaya produksi (Cash HPP)
+                  </td>
+                  <td style="text-align: center; font-weight: 700; color: #dc2626;">Rp4.487/kg</td>
+                  <td style="text-align: right; font-family: 'JetBrains Mono', monospace; font-weight: 800;">2.333.240.000</td>
+                </tr>
+                <tr class="highlight-row-slate">
+                  <td style="font-weight: 900;">Laba Kotor</td>
+                  <td style="text-align: center; font-size: 10px; color: #475569;">Omzet - Cash HPP</td>
+                  <td style="text-align: right; font-family: 'JetBrains Mono', monospace; font-weight: 900; color: #0c2b53;">1.982.760.000</td>
+                </tr>
+                <tr>
+                  <td style="font-size: 10px; color: #475569; padding-left: 14px;">
+                    Biaya operasional lain (utilitas, naker, legal, SG&A)
+                  </td>
+                  <td style="text-align: center; font-size: 9.5px; color: #64748b;">Alokasi Pengelola</td>
+                  <td style="text-align: right; font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #dc2626;">15.000.000</td>
+                </tr>
+                <tr class="highlight-row-slate">
+                  <td style="font-weight: 900;">EBITDA (perkiraan)</td>
+                  <td style="text-align: center; font-size: 10px; color: #475569;">Laba Kotor - Biaya Ops</td>
+                  <td style="text-align: right; font-family: 'JetBrains Mono', monospace; font-weight: 900; color: #0c2b53;">1.967.760.000</td>
+                </tr>
+                <tr>
+                  <td style="font-size: 10px; color: #475569; padding-left: 14px;">
+                    Depresiasi (5 tahun)
+                  </td>
+                  <td style="text-align: center; font-size: 9.5px; color: #64748b;">Rp160/kg (Capex Rp5 M / 60 bln)</td>
+                  <td style="text-align: right; font-family: 'JetBrains Mono', monospace; font-weight: 700; color: #dc2626;">83.200.000</td>
+                </tr>
+                <tr class="highlight-row-mint">
+                  <td style="font-weight: 900; font-size: 12px; display: flex; align-items: center; gap: 6px;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                    EAT (Estimasi)
+                  </td>
+                  <td style="text-align: center; font-size: 10px; font-weight: 800;">EBITDA - Depresiasi</td>
+                  <td style="text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 13.5px; font-weight: 900;">Rp1.884.560.000</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- (5) PEMBAGIAN LABA (EAT) -->
+        <section class="section-card">
+          <div class="section-header navy">
+            <span class="badge-number">5</span>
+            <span>PEMBAGIAN LABA (EAT)</span>
+          </div>
+          <div class="section-body">
+            <div class="donut-layout">
+              <!-- Visual SVG Donut -->
+              <div class="donut-visual">
+                <svg viewBox="0 0 36 36">
+                  <!-- Gray Track -->
+                  <circle cx="18" cy="18" r="14" fill="none" stroke="#e2e8f0" stroke-width="5"/>
+                  <!-- Blue 40% (stroke-dasharray: 35.19 87.96, offset: 0) -->
+                  <circle cx="18" cy="18" r="14" fill="none" stroke="#0284c7" stroke-width="5.5" stroke-dasharray="35.2 88" stroke-dashoffset="0"/>
+                  <!-- Green 60% (stroke-dasharray: 52.8 88, offset: -35.2) -->
+                  <circle cx="18" cy="18" r="14" fill="none" stroke="#059669" stroke-width="5.5" stroke-dasharray="52.8 88" stroke-dashoffset="-35.2"/>
+                </svg>
+                <div class="donut-center-label">
+                  <span class="lbl-eat">EAT</span>
+                  <span class="lbl-num">Rp1.884,56 jt</span>
+                  <span class="lbl-per">per bulan</span>
+                </div>
+              </div>
+
+              <!-- Breakdown Cards -->
+              <div class="share-breakdown">
+                <!-- 60% Pihak Pertama -->
+                <div class="share-pill green-border">
+                  <div class="share-pct-badge green">60%</div>
+                  <div class="share-details">
+                    <h4 style="color: #065f46;">Rp1.130,74 juta</h4>
+                    <p>PIHAK PERTAMA</p>
+                    <span>PT Pioner Nusantara Sukses (Pemodal)</span>
+                  </div>
+                  <div style="text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 800; color: #047857;">
+                    Rp13,57 M/thn
+                  </div>
+                </div>
+
+                <!-- 40% Pihak Kedua -->
+                <div class="share-pill blue-border">
+                  <div class="share-pct-badge blue">40%</div>
+                  <div class="share-details">
+                    <h4 style="color: #1e40af;">Rp753,82 juta</h4>
+                    <p>PIHAK KEDUA</p>
+                    <span>PT. Randu Agung Bersaudara (Pengelola)</span>
+                  </div>
+                  <div style="text-align: right; font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 800; color: #1d4ed8;">
+                    Rp9,05 M/thn
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- RIGHT COLUMN: (6) ALUR KERJASAMA, (7) MANFAAT KERJASAMA, CATATAN PENTING -->
+      <div class="col-right">
+
+        <!-- (6) ALUR KERJASAMA -->
+        <section class="section-card">
+          <div class="section-header navy">
+            <span class="badge-number">6</span>
+            <span>ALUR KERJASAMA</span>
+          </div>
+          <div class="section-body">
+            <div class="flow-steps-h">
+              <!-- 1. Investasi -->
+              <div class="flow-step-circle">
+                <div class="flow-circle-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                </div>
+                <div class="flow-circle-label">Investasi oleh Pihak Pertama</div>
+                <div class="flow-circle-sub">Capex Rp5 M</div>
+              </div>
+
+              <div class="flow-arrow-div">➔</div>
+
+              <!-- 2. Operasional -->
+              <div class="flow-step-circle">
+                <div class="flow-circle-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                </div>
+                <div class="flow-circle-label">Operasional & Perizinan</div>
+                <div class="flow-circle-sub">Pihak Kedua</div>
+              </div>
+
+              <div class="flow-arrow-div">➔</div>
+
+              <!-- 3. Produksi PCO -->
+              <div class="flow-step-circle">
+                <div class="flow-circle-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                </div>
+                <div class="flow-circle-label">Produksi PCO (Minyak)</div>
+                <div class="flow-circle-sub">520 Ton/bln</div>
+              </div>
+
+              <div class="flow-arrow-div">➔</div>
+
+              <!-- 4. Penjualan -->
+              <div class="flow-step-circle">
+                <div class="flow-circle-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                </div>
+                <div class="flow-circle-label">Penjualan ke Industri</div>
+                <div class="flow-circle-sub">Rp4,32 M/bln</div>
+              </div>
+
+              <div class="flow-arrow-div">➔</div>
+
+              <!-- 5. Bagi Hasil EAT -->
+              <div class="flow-step-circle">
+                <div class="flow-circle-icon" style="background: #059669;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <div class="flow-circle-label">Bagi Hasil EAT</div>
+                <div class="flow-circle-sub">60% : 40%</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- (7) MANFAAT KERJASAMA -->
+        <section class="section-card">
+          <div class="section-header navy">
+            <span class="badge-number">7</span>
+            <span>MANFAAT KERJASAMA</span>
+          </div>
+          <div class="section-body">
+            <div class="benefits-grid">
+              <!-- PIHAK PERTAMA (Pemodal) -->
+              <div class="benefit-card">
+                <div class="benefit-header green">PIHAK PERTAMA (Pemodal)</div>
+                <ul class="benefit-list">
+                  <li>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    Potensi return investasi menarik (Payback ±4,4 bulan)
+                  </li>
+                  <li>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    Aset 100% tetap milik sah perusahaan
+                  </li>
+                  <li>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    Tidak perlu terlibat operasional harian
+                  </li>
+                  <li>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    Berkontribusi pada energi bersih & ekonomi hijau
+                  </li>
+                </ul>
+              </div>
+
+              <!-- PIHAK KEDUA (Pengelola) -->
+              <div class="benefit-card">
+                <div class="benefit-header blue">PIHAK KEDUA (Pengelola)</div>
+                <ul class="benefit-list">
+                  <li>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    Mendapat bagian laba 40% dari EAT (± Rp753 jt/bln)
+                  </li>
+                  <li>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    Mengelola operasional secara penuh dan mandiri
+                  </li>
+                  <li>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    Mengembangkan pasar & perizinan industri
+                  </li>
+                  <li>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    Meningkatkan nilai & skala usaha bersama
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- CATATAN PENTING -->
+            <div class="notes-box">
+              <svg class="notes-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+              <div class="notes-body">
+                <h4>CATATAN PENTING</h4>
+                <ol>
+                  <li>Angka dalam ilustrasi bersifat estimasi, dapat berubah sesuai kondisi aktual di lapangan.</li>
+                  <li>Pembagian laba berdasarkan EAT (laba bersih setelah pajak).</li>
+                  <li>Pihak Kedua bertanggung jawab atas operasional, perizinan, dan kepatuhan hukum.</li>
+                  <li>Mekanisme pembayaran laba dilakukan setiap bulan/kuartal sesuai kesepakatan tertulis.</li>
+                  <li>Detail hak, kewajiban, dan mekanisme kerjasama diatur dalam Perjanjian Kerjasama resmi.</li>
+                </ol>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+      </div>
+
+    </main>
+
+    <!-- FOOTER BANNER -->
+    <footer class="footer-banner">
+      <div class="footer-left">
+        <svg width="28" height="28" viewBox="0 0 100 100" fill="none">
+          <path d="M20 80 C 15 45, 45 20, 85 15 C 80 55, 55 80, 20 80 Z" fill="#22c55e"/>
+          <path d="M20 80 C 35 60, 60 40, 85 15" stroke="#15803d" stroke-width="4"/>
+        </svg>
+        <div>
+          <h4>KOLABORASI HARI INI</h4>
+          <p>UNTUK ENERGI BERKELANJUTAN</p>
+        </div>
+      </div>
+
+      <div class="footer-pillars">
+        <div class="footer-pill-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span>OPERASI EFISIEN</span>
+        </div>
+        <div class="footer-pill-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span>PATUH REGULASI</span>
+        </div>
+        <div class="footer-pill-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></svg>
+          <span>BERDAMPAK POSITIF</span>
+        </div>
+        <div class="footer-pill-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          <span>NILAI EKONOMI</span>
+        </div>
+
+        <div class="payback-tag">
+          <span>⚡ Payback Pemodal:</span>
+          <strong>± 4,42 Bulan</strong>
+        </div>
+      </div>
+
+      <div class="footer-right-brand">
+        <svg width="24" height="24" viewBox="0 0 100 100" fill="none">
+          <path d="M20 80 C 15 45, 45 20, 85 15 C 80 55, 55 80, 20 80 Z" fill="#22c55e"/>
+        </svg>
+        <div>
+          <div class="pco-brand-txt">PCO</div>
+          <div class="pco-brand-sub">ENERGI BERSIH MASA DEPAN CERAH</div>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+</body>
+</html>

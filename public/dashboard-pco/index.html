@@ -68,6 +68,40 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .slide-tabs {
+      display: inline-flex;
+      background: rgba(2, 6, 23, 0.6);
+      padding: 3px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      gap: 4px;
+    }
+
+    .tab-link {
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #94a3b8;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tab-link:hover {
+      color: #f8fafc;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .tab-link.active {
+      color: #ffffff;
+      background: linear-gradient(135deg, #0a6358, #059669);
+      box-shadow: 0 2px 8px rgba(10, 99, 88, 0.4);
     }
 
     .badge-live {
@@ -831,8 +865,17 @@
   <!-- Top Navigation & Action Toolbar -->
   <div class="toolbar-nav">
     <div class="toolbar-left">
-      <span class="badge-live">REKAPITULASI RESMI</span>
-      <span>Dashboard Analisis Investasi Produksi PCO (Parameter Terbaru)</span>
+      <div class="slide-tabs">
+        <a href="./" class="tab-link active">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Slide 1: Proposal Investasi
+        </a>
+        <a href="./kerjasama.html" class="tab-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Slide 2: Skema Kerjasama & Bagi Hasil
+        </a>
+      </div>
+      <span class="badge-live">DATA RESMI REVISI</span>
     </div>
 
     <div class="toolbar-actions">
