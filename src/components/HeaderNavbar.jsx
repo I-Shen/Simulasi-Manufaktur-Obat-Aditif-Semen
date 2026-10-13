@@ -126,6 +126,16 @@ export const HeaderNavbar = () => {
 
         {/* Global Action Controls */}
         <div className="flex items-center gap-2">
+          {/* Link to Sub-App Dashboard PCO */}
+          <a
+            href="./pco/"
+            className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg bg-gradient-to-r from-teal-800 to-emerald-800 hover:from-teal-700 hover:to-emerald-700 text-teal-100 transition border border-teal-400/50 shadow-md shadow-teal-900/30"
+            title="Buka Dashboard Rekapitulasi Proposal Investasi PCO"
+          >
+            <span className="text-emerald-300 text-sm">🌱</span>
+            <span className="hidden md:inline">Dashboard PCO</span>
+          </a>
+
           {/* Dynamic Excel Download Button according to Mode */}
           {isTrial ? (
             <a

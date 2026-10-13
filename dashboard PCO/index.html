@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proposal Investasi Produksi PCO — Dashboard Rekapitulasi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Caveat:wght@600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-page: #0f172a;
+      --card-bg: #ffffff;
+      --navy-dark: #0c2b53;
+      --navy-blue: #143e72;
+      --teal-primary: #0a6358;
+      --teal-light: #e0f2f1;
+      --green-leaf: #22c55e;
+      --green-dark: #15803d;
+      --green-mint: #d1fae5;
+      --amber-note: #d97706;
+      --amber-bg: #fffbeb;
+      --blue-accent: #0284c7;
+      --blue-soft: #e0f2fe;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --border-soft: #cbd5e1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #090d16;
+      color: var(--text-main);
+      padding: 16px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    /* Top Navigation Toolbar */
+    .toolbar-nav {
+      max-width: 1440px;
+      width: 100%;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 10px 18px;
+      margin-bottom: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: #e2e8f0;
+      font-size: 13px;
+    }
+
+    .toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge-live {
+      background: #059669;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .badge-live::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #34d399;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.3); }
+    }
+
+    .toolbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-scada {
+      background: #1e293b;
+      color: #94a3b8;
+      border: 1px solid #334155;
+    }
+
+    .btn-scada:hover {
+      background: #334155;
+      color: #fff;
+    }
+
+    .btn-excel {
+      background: linear-gradient(135deg, #059669, #047857);
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(5, 150, 105, 0.4);
+    }
+
+    .btn-excel:hover {
+      background: linear-gradient(135deg, #047857, #065f46);
+      transform: translateY(-1px);
+    }
+
+    /* Main Poster Canvas */
+    .infographic-canvas {
+      max-width: 1440px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* TOP HEADER */
+    .header-banner {
+      background: #ffffff;
+      border-bottom: 2px solid #e2e8f0;
+      padding: 18px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .header-title-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .leaf-logo {
+      width: 44px;
+      height: 44px;
+      flex-shrink: 0;
+    }
+
+    .header-titles h1 {
+      font-size: 26px;
+      font-weight: 900;
+      color: #0f172a;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+    }
+
+    .header-titles h2 {
+      font-size: 26px;
+      font-weight: 900;
+      color: #0d9488;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+    }
+
+    .header-titles p {
+      font-size: 13px;
+      font-weight: 600;
+      color: #475569;
+      margin-top: 3px;
+    }
+
+    /* 4 Icons Pill */
+    .header-center-pillars {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .pillar-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      text-align: center;
+    }
+
+    .pillar-icon {
+      width: 28px;
+      height: 28px;
+      color: #0f172a;
+    }
+
+    .pillar-label {
+      font-size: 9px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      max-width: 75px;
+      line-height: 1.1;
+    }
+
+    /* Right Badge Header */
+    .header-right-callout {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .script-quote {
+      font-family: 'Caveat', cursive;
+      font-size: 22px;
+      font-weight: 700;
+      color: #0284c7;
+      line-height: 1.05;
+      text-align: right;
+    }
+
+    .pco-brand-box {
+      border-left: 2px solid #e2e8f0;
+      padding-left: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pco-brand-box .brand-name {
+      font-size: 24px;
+      font-weight: 900;
+      color: #0f172a;
+      line-height: 1;
+    }
+
+    .pco-brand-box .brand-desc {
+      font-size: 9px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      line-height: 1.2;
+    }
+
+    .factory-silhouette {
+      width: 48px;
+      height: 38px;
+      color: #0284c7;
+      opacity: 0.85;
+    }
+
+    /* MAIN CONTENT GRID (3 COLUMNS) */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 3.2fr 3.4fr 3.4fr;
+      gap: 18px;
+      padding: 22px 28px;
+      background: #f8fafc;
+    }
+
+    @media (max-width: 1100px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* SECTIONS & CARDS */
+    .section-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 16px;
+    }
+
+    .section-header {
+      padding: 9px 14px;
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    .section-header.blue {
+      background: #0d3868;
+    }
+
+    .section-header.teal {
+      background: #0c6155;
+    }
+
+    .badge-number {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      color: #0d3868;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .section-header.teal .badge-number {
+      color: #0c6155;
+    }
+
+    .section-body {
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 12.5px;
+    }
+
+    /* Key-Value Row */
+    .data-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 5px 0;
+      border-bottom: 1px dashed #f1f5f9;
+    }
+
+    .data-row:last-child {
+      border-bottom: none;
+    }
+
+    .row-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #1e293b;
+      font-weight: 600;
+    }
+
+    .row-left svg {
+      width: 16px;
+      height: 16px;
+      color: #0284c7;
+      flex-shrink: 0;
+    }
+
+    .row-right {
+      font-weight: 800;
+      color: #0f172a;
+      text-align: right;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Highlight Banner inside cards */
+    .highlight-card {
+      background: #d1fae5;
+      border-radius: 8px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 4px;
+    }
+
+    .highlight-card.blue {
+      background: #dbeafe;
+    }
+
+    .highlight-label {
+      font-size: 13px;
+      font-weight: 800;
+      color: #065f46;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .highlight-card.blue .highlight-label {
+      color: #1e40af;
+    }
+
+    .highlight-val {
+      font-size: 15px;
+      font-weight: 900;
+      color: #065f46;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .highlight-card.blue .highlight-val {
+      color: #1e40af;
+    }
+
+    /* TABLE HPP */
+    .table-hpp {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11.5px;
+    }
+
+    .table-hpp th {
+      background: #f1f5f9;
+      color: #475569;
+      font-weight: 800;
+      padding: 6px 8px;
+      text-align: left;
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .table-hpp td {
+      padding: 6px 8px;
+      border-bottom: 1px solid #f1f5f9;
+      color: #1e293b;
+    }
+
+    .table-hpp .td-komp {
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .table-hpp .td-val {
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      text-align: right;
+    }
+
+    .table-hpp .td-ket {
+      color: #64748B;
+      font-size: 10.5px;
+    }
+
+    /* Special highlight rows in table */
+    .row-pill-green {
+      background: #ccfbf1 !important;
+      font-weight: 800 !important;
+      color: #0f766e !important;
+    }
+
+    .row-pill-green td {
+      color: #0f766e !important;
+      font-weight: 800 !important;
+    }
+
+    .row-pill-blue {
+      background: #dbeafe !important;
+      font-weight: 800 !important;
+      color: #1e40af !important;
+    }
+
+    .row-pill-blue td {
+      color: #1e40af !important;
+      font-weight: 800 !important;
+    }
+
+    /* RIGHT COLUMN (KEY HIGHLIGHTS & VALUE STREAM) */
+    .col-right {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .right-header {
+      background: #065f46;
+      color: #ffffff;
+      padding: 9px 14px;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      border-radius: 10px 10px 0 0;
+    }
+
+    .highlights-grid {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-top: none;
+      border-radius: 0 0 10px 10px;
+      padding: 12px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    .kpi-card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: transform 0.2s;
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    .kpi-icon-wrap {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: #e0f2fe;
+      color: #0369a1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .kpi-icon-wrap.green {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .kpi-text h3 {
+      font-size: 18px;
+      font-weight: 900;
+      color: #0f172a;
+      line-height: 1.1;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .kpi-text p {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #475569;
+      margin-top: 2px;
+    }
+
+    /* VALUE STREAM (ALUR NILAI) */
+    .stream-box {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    .stream-header {
+      background: #0f2b48;
+      color: #ffffff;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .stream-flow {
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .flow-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 6px;
+      flex: 1;
+    }
+
+    .flow-icon-circle {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #e0f2fe;
+      color: #0369a1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(2, 132, 199, 0.15);
+    }
+
+    .flow-label {
+      font-size: 9.5px;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.1;
+    }
+
+    .flow-arrow {
+      color: #10b981;
+      font-weight: 900;
+      font-size: 16px;
+    }
+
+    /* CATATAN PENTING */
+    .notes-box {
+      background: var(--amber-bg);
+      border: 1.5px solid #fde68a;
+      border-radius: 10px;
+      padding: 12px 16px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .notes-icon {
+      color: var(--amber-note);
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .notes-content h4 {
+      font-size: 12px;
+      font-weight: 800;
+      color: #92400e;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .notes-content ol {
+      list-style-type: decimal;
+      padding-left: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 10.5px;
+      font-weight: 600;
+      color: #78350f;
+      line-height: 1.35;
+    }
+
+    /* EXECUTIVE CONCLUSION (BOTTOM FOOTER) */
+    .conclusion-bar {
+      background: #ffffff;
+      border-top: 2px solid #e2e8f0;
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .conclusion-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .bulb-icon {
+      width: 32px;
+      height: 32px;
+      color: #0284c7;
+      flex-shrink: 0;
+    }
+
+    .conclusion-title-box {
+      border-right: 2px solid #cbd5e1;
+      padding-right: 14px;
+      margin-right: 14px;
+    }
+
+    .conclusion-title-box h4 {
+      font-size: 12px;
+      font-weight: 900;
+      color: #0f172a;
+      letter-spacing: 0.5px;
+      line-height: 1.1;
+    }
+
+    .conclusion-title-box p {
+      font-size: 11px;
+      font-weight: 800;
+      color: #0284c7;
+      letter-spacing: 0.5px;
+    }
+
+    .conclusion-text {
+      font-size: 12px;
+      font-weight: 600;
+      color: #334155;
+      line-height: 1.45;
+    }
+
+    .conclusion-right-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .conclusion-right-brand .leaf-small {
+      width: 32px;
+      height: 32px;
+    }
+
+    .conclusion-right-brand .brand-pco-btm {
+      font-size: 18px;
+      font-weight: 900;
+      color: #0f172a;
+      line-height: 1;
+    }
+
+    .conclusion-right-brand .brand-tag-btm {
+      font-size: 8.5px;
+      font-weight: 800;
+      color: #059669;
+      letter-spacing: 0.5px;
+    }
+
+    /* INTERACTIVE SIMULATOR DRAWER */
+    .sim-drawer {
+      max-width: 1440px;
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 12px;
+      margin-top: 14px;
+      padding: 16px 20px;
+      color: #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      font-size: 12px;
+    }
+
+    .sim-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #1e293b;
+      padding-bottom: 8px;
+    }
+
+    .sim-header h3 {
+      font-size: 13px;
+      font-weight: 800;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sim-controls-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      align-items: center;
+    }
+
+    .sim-control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .sim-control-group label {
+      font-size: 11px;
+      color: #94a3b8;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .sim-control-group label span {
+      color: #38bdf8;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+    }
+
+    .sim-slider {
+      width: 100%;
+      accent-color: #0284c7;
+      cursor: pointer;
+    }
+
+    .sim-reset-btn {
+      padding: 8px 16px;
+      background: #334155;
+      color: #f1f5f9;
+      border: none;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 11px;
+      cursor: pointer;
+      align-self: flex-end;
+    }
+
+    .sim-reset-btn:hover {
+      background: #475569;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation & Action Toolbar -->
+  <div class="toolbar-nav">
+    <div class="toolbar-left">
+      <span class="badge-live">REKAPITULASI RESMI</span>
+      <span>Dashboard Analisis Investasi Produksi PCO (Parameter Terbaru)</span>
+    </div>
+
+    <div class="toolbar-actions">
+      <a href="../" class="btn-action btn-scada">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Kembali ke SCADA Pabrik Semen
+      </a>
+      <a href="Simulasi_Investasi_dan_Produksi_PCO.xlsx" download class="btn-action btn-excel">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+        Unduh Excel Model Lengkap (.xlsx)
+      </a>
+    </div>
+  </div>
+
+  <!-- Main Infographic Board matching Screenshot Layout -->
+  <div class="infographic-canvas">
+
+    <!-- 1. HEADER BANNER -->
+    <header class="header-banner">
+      <!-- Title & Leaf Logo -->
+      <div class="header-title-group">
+        <svg class="leaf-logo" viewBox="0 0 100 100" fill="none">
+          <path d="M20 80 C 15 45, 45 20, 85 15 C 80 55, 55 80, 20 80 Z" fill="#22c55e"/>
+          <path d="M20 80 C 35 60, 60 40, 85 15" stroke="#15803d" stroke-width="4" stroke-linecap="round"/>
+          <path d="M15 85 C 10 65, 25 50, 50 45 C 45 70, 30 85, 15 85 Z" fill="#84cc16"/>
+        </svg>
+        <div class="header-titles">
+          <h1>PROPOSAL INVESTASI</h1>
+          <h2>PRODUKSI PCO</h2>
+          <p>Dari Bahan Baku Menjadi Produk Bernilai Ekonomi</p>
+        </div>
+      </div>
+
+      <!-- Center 4 Pillar Icons -->
+      <div class="header-center-pillars">
+        <div class="pillar-item">
+          <svg class="pillar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+          <span class="pillar-label">NILAI EKONOMI</span>
+        </div>
+        <div class="pillar-item">
+          <svg class="pillar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span class="pillar-label">EFISIENSI PRODUKSI</span>
+        </div>
+        <div class="pillar-item">
+          <svg class="pillar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span class="pillar-label">POTENSI KEUNTUNGAN</span>
+        </div>
+        <div class="pillar-item">
+          <svg class="pillar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          <span class="pillar-label">PELUANG EKSPANSI</span>
+        </div>
+      </div>
+
+      <!-- Right Callout & Factory Silhouettes -->
+      <div class="header-right-callout">
+        <div class="script-quote">
+          Solusi Hari Ini<br>Untuk Masa Depan
+        </div>
+        <div class="pco-brand-box">
+          <svg class="factory-silhouette" viewBox="0 0 64 48" fill="currentColor">
+            <path d="M4 44h56v-4h-2V16l-8 6V10l-8 6V8l-10 8v24h-4V24l-6 4v12h-4V30l-6 4v6H4v4z"/>
+            <rect x="52" y="22" width="4" height="6" fill="#ffffff"/>
+            <rect x="52" y="30" width="4" height="6" fill="#ffffff"/>
+          </svg>
+          <div>
+            <div class="brand-name">PCO</div>
+            <div class="brand-desc">PRODUK BERNILAI<br>UNTUK INDUSTRI</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 2. MAIN 3-COLUMN CONTENT -->
+    <main class="main-grid">
+
+      <!-- LEFT COLUMN: 1. INVESTASI, 2. KAPASITAS & PRODUKSI, 3. HARGA JUAL & OMZET -->
+      <div class="col-left">
+
+        <!-- 1. INVESTASI -->
+        <section class="section-card">
+          <div class="section-header blue">
+            <span class="badge-number">1</span>
+            <span>INVESTASI</span>
+          </div>
+          <div class="section-body">
+            <div class="data-row">
+              <div class="row-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
+                <span>4 Unit Mesin @ Rp900 juta</span>
+              </div>
+              <div class="row-right" id="val-mesin">Rp3,60 Miliar</div>
+            </div>
+            <div class="data-row">
+              <div class="row-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M3 10l9-7 9 7v11H3V10z"/><path d="M9 21V12h6v9"/></svg>
+                <span>Pembangunan Gudang</span>
+              </div>
+              <div class="row-right" id="val-gudang">Rp1,40 Miliar</div>
+            </div>
+            <div class="highlight-card">
+              <span class="highlight-label">Total Investasi</span>
+              <span class="highlight-val" id="val-total-inv">Rp5,00 Miliar</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. KAPASITAS & PRODUKSI -->
+        <section class="section-card">
+          <div class="section-header blue">
+            <span class="badge-number">2</span>
+            <span>KAPASITAS & PRODUKSI</span>
+          </div>
+          <div class="section-body">
+            <div class="data-row">
+              <div class="row-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                <span>Kapasitas sebelum yield</span>
+              </div>
+              <div class="row-right" id="val-cap-in">30 Ton/hari</div>
+            </div>
+            <div class="data-row">
+              <div class="row-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
+                <span>Yield produksi</span>
+              </div>
+              <div class="row-right" id="val-yield">70%</div>
+            </div>
+            <div class="data-row">
+              <div class="row-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                <span>Produk jadi setelah yield</span>
+              </div>
+              <div class="row-right" id="val-cap-out">20 Ton/hari</div>
+            </div>
+            <div class="data-row">
+              <div class="row-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span>Jam operasi per hari</span>
+              </div>
+              <div class="row-right" id="val-jam">21 jam</div>
+            </div>
+            <div class="data-row">
+              <div class="row-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                <span>Hari kerja per bulan</span>
+              </div>
+              <div class="row-right" id="val-hari">26 hari</div>
+            </div>
+            <div class="highlight-card">
+              <span class="highlight-label">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M3 7l6-4 6 4 6-4v18H3V7z"/></svg>
+                Produksi per bulan
+              </span>
+              <span class="highlight-val" id="val-prod-bulan">520.000 kg (± 520,00 ton)</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. HARGA JUAL & OMZET -->
+        <section class="section-card">
+          <div class="section-header blue">
+            <span class="badge-number">3</span>
+            <span>HARGA JUAL & OMZET</span>
+          </div>
+          <div class="section-body">
+            <div class="data-row">
+              <div class="row-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                <span>Harga jual</span>
+              </div>
+              <div class="row-right" id="val-harga-jual">Rp8.300/kg</div>
+            </div>
+            <div class="data-row">
+              <div class="row-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                <span>Omzet per bulan</span>
+              </div>
+              <div class="row-right" style="color: #0284c7; font-size: 14px;" id="val-omzet">Rp4.316,00 juta</div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- CENTER COLUMN: 4. STRUKTUR HPP, 5. PROFITABILITAS -->
+      <div class="col-center">
+
+        <!-- 4. STRUKTUR HPP -->
+        <section class="section-card">
+          <div class="section-header teal">
+            <span class="badge-number">4</span>
+            <span>STRUKTUR HPP</span>
+          </div>
+          <div class="section-body" style="padding: 6px;">
+            <table class="table-hpp">
+              <thead>
+                <tr>
+                  <th>Komponen</th>
+                  <th style="text-align: right;">Rp/kg</th>
+                  <th>Keterangan</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="td-komp">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                    Raw Mat efektif
+                  </td>
+                  <td class="td-val" id="val-rawmat">2.000</td>
+                  <td class="td-ket">Setelah yield 70%</td>
+                </tr>
+                <tr>
+                  <td class="td-komp">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    Biaya produksi
+                  </td>
+                  <td class="td-val" id="val-biayaprod">2.000</td>
+                  <td class="td-ket">Operasional proses (21 jam)</td>
+                </tr>
+                <tr>
+                  <td class="td-komp">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M3 10l9-7 9 7v11H3V10z"/></svg>
+                    Sewa gudang
+                  </td>
+                  <td class="td-val" id="val-sewagudang">487</td>
+                  <td class="td-ket">Alokasi biaya gudang</td>
+                </tr>
+                <tr class="row-pill-green">
+                  <td class="td-komp">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M15 9.5H9"/></svg>
+                    Cash HPP
+                  </td>
+                  <td class="td-val" id="val-cash-hpp">4.487</td>
+                  <td class="td-ket" style="color: #0f766e; font-weight: 700;">Total Kas Langsung</td>
+                </tr>
+                <tr>
+                  <td class="td-komp">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                    Depresiasi
+                  </td>
+                  <td class="td-val" id="val-depresiasi">160</td>
+                  <td class="td-ket">Asumsi 5 tahun garis lurus</td>
+                </tr>
+                <tr class="row-pill-blue">
+                  <td class="td-komp">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    Full HPP
+                  </td>
+                  <td class="td-val" id="val-full-hpp">4.647</td>
+                  <td class="td-ket" style="color: #1e40af; font-weight: 700;">Total COGS Lengkap</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- 5. PROFITABILITAS -->
+        <section class="section-card">
+          <div class="section-header teal">
+            <span class="badge-number">5</span>
+            <span>PROFITABILITAS</span>
+          </div>
+          <div class="section-body">
+            <div class="data-row">
+              <div class="row-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/></svg>
+                <span>Harga jual</span>
+              </div>
+              <div class="row-right" id="val-prof-hj">Rp8.300/kg</div>
+            </div>
+            <div class="data-row">
+              <div class="row-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+                <span>Full HPP</span>
+              </div>
+              <div class="row-right" id="val-prof-hpp">Rp4.647/kg</div>
+            </div>
+            <div class="data-row">
+              <div class="row-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                <span>Laba per kg</span>
+              </div>
+              <div class="row-right" style="color: #059669; font-size: 14px;" id="val-laba-kg">Rp3.653/kg</div>
+            </div>
+            <div class="highlight-card">
+              <span class="highlight-label">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                Laba per bulan (520.000 kg)
+              </span>
+              <span class="highlight-val" id="val-laba-bln">Rp1.899,56 juta</span>
+            </div>
+            <div class="data-row" style="margin-top: 4px; padding-top: 4px;">
+              <div class="row-left">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
+                <span style="font-weight: 800; color: #0f172a;">Laba per tahun</span>
+              </div>
+              <div class="row-right" style="font-size: 15px; color: #047857; font-weight: 900;" id="val-laba-thn">Rp22,79 miliar</div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- RIGHT COLUMN: KEY HIGHLIGHTS, ALUR NILAI, CATATAN PENTING -->
+      <div class="col-right">
+
+        <!-- KEY HIGHLIGHTS -->
+        <div>
+          <div class="right-header">KEY HIGHLIGHTS</div>
+          <div class="highlights-grid">
+            <!-- 4 Unit Mesin -->
+            <div class="kpi-card">
+              <div class="kpi-icon-wrap">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21h16M4 7l4-4 4 4 4-4 4 4v14H4V7z"/></svg>
+              </div>
+              <div class="kpi-text">
+                <h3 id="kpi-mesin">4</h3>
+                <p>Unit Mesin<br><span style="color: #0284c7;">(Rp3,6 M)</span></p>
+              </div>
+            </div>
+
+            <!-- 520 Ton/bulan -->
+            <div class="kpi-card">
+              <div class="kpi-icon-wrap green">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+              </div>
+              <div class="kpi-text">
+                <h3 id="kpi-ton">520</h3>
+                <p>Ton/bulan<br>Produksi</p>
+              </div>
+            </div>
+
+            <!-- Omzet -->
+            <div class="kpi-card">
+              <div class="kpi-icon-wrap">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18M7 6h1v4"/></svg>
+              </div>
+              <div class="kpi-text">
+                <h3 style="font-size: 15px;" id="kpi-omzet">Rp4.316 jt</h3>
+                <p>Omzet/bulan<br><span style="color: #0284c7;">(Rp4,32 M)</span></p>
+              </div>
+            </div>
+
+            <!-- Laba -->
+            <div class="kpi-card">
+              <div class="kpi-icon-wrap green">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+              </div>
+              <div class="kpi-text">
+                <h3 style="font-size: 15px; color: #059669;" id="kpi-laba">Rp1.900 jt</h3>
+                <p>Laba/bulan<br><span style="color: #059669;">(Rp22,79 M/thn)</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ALUR NILAI -->
+        <div class="stream-box">
+          <div class="stream-header">ALUR NILAI</div>
+          <div class="stream-flow">
+            <!-- 1. Bahan Baku -->
+            <div class="flow-step">
+              <div class="flow-icon-circle">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+              </div>
+              <span class="flow-label">Bahan Baku<br><strong style="color: #0284c7;">(30 T/hari)</strong></span>
+            </div>
+            <span class="flow-arrow">➔</span>
+
+            <!-- 2. Proses Produksi -->
+            <div class="flow-step">
+              <div class="flow-icon-circle" style="background: #e0f2fe; color: #0284c7;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+              </div>
+              <span class="flow-label">Proses Produksi<br><strong style="color: #0d9488;">(Yield 70%)</strong></span>
+            </div>
+            <span class="flow-arrow">➔</span>
+
+            <!-- 3. PCO Produk Jadi -->
+            <div class="flow-step">
+              <div class="flow-icon-circle" style="background: #d1fae5; color: #059669;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+              </div>
+              <span class="flow-label">PCO Produk Jadi<br><strong style="color: #059669;">(20 T/hari)</strong></span>
+            </div>
+            <span class="flow-arrow">➔</span>
+
+            <!-- 4. Nilai Ekonomi -->
+            <div class="flow-step">
+              <div class="flow-icon-circle" style="background: #fef3c7; color: #d97706;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M3 7l6-4 6 4 6-4v18H3V7z"/></svg>
+              </div>
+              <span class="flow-label">Nilai Ekonomi<br>untuk Industri</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CATATAN PENTING -->
+        <div class="notes-box">
+          <svg class="notes-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          <div class="notes-content">
+            <h4>CATATAN PENTING</h4>
+            <ol>
+              <li>Perhitungan di atas belum dikurangi pajak.</li>
+              <li>Belum termasuk bunga/modal kerja untuk skala kapasitas 520 Ton/bulan.</li>
+              <li>Belum termasuk biaya lain di luar asumsi tersebut.</li>
+              <li>Angka dapat berubah sesuai kondisi aktual di lapangan.</li>
+            </ol>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+    <!-- 3. BOTTOM BANNER: EXECUTIVE CONCLUSION -->
+    <footer class="conclusion-bar">
+      <div class="conclusion-left">
+        <svg class="bulb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 18h6M10 22h4M15 2a6 6 0 0 0-6 6c0 2 1 3.5 2 4.5V15a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-2.5c1-1 2-2.5 2-4.5a6 6 0 0 0-6-6z"/></svg>
+        <div class="conclusion-title-box">
+          <h4>EXECUTIVE</h4>
+          <p>CONCLUSION</p>
+        </div>
+        <p class="conclusion-text">
+          Investasi kapasitas 20 Ton/hari (520 Ton/bln) memiliki potensi margin luar biasa (Laba Rp 22,79 Miliar/tahun dengan Payback Period ±2,6 Bulan atas Capex Rp 5 Miliar). Validasi biaya operasional, pasar, pajak, modal kerja, dan utilitas 21 jam/hari diperlukan sebelum keputusan final.
+        </p>
+      </div>
+
+      <div class="conclusion-right-brand">
+        <svg class="leaf-small" viewBox="0 0 100 100" fill="none">
+          <path d="M20 80 C 15 45, 45 20, 85 15 C 80 55, 55 80, 20 80 Z" fill="#22c55e"/>
+          <path d="M15 85 C 10 65, 25 50, 50 45 C 45 70, 30 85, 15 85 Z" fill="#84cc16"/>
+        </svg>
+        <div>
+          <div class="brand-pco-btm">PCO</div>
+          <div class="brand-tag-btm">DARI POTENSI MENJADI NILAI</div>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Interactive Sensitivity Drawer (Allows Executives to test price & days dynamically) -->
+  <aside class="sim-drawer">
+    <div class="sim-header">
+      <h3>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        SIMULATOR SENSITIVITAS REAKTIF (Uji Harga Jual & Hari Kerja)
+      </h3>
+      <button class="sim-reset-btn" id="btn-reset-sim">Reset Nilai Default</button>
+    </div>
+
+    <div class="sim-controls-grid">
+      <div class="sim-control-group">
+        <label for="slider-price">
+          Harga Jual PCO: <span id="label-price">Rp 8.300 / kg</span>
+        </label>
+        <input type="range" id="slider-price" class="sim-slider" min="6500" max="10500" step="100" value="8300">
+      </div>
+
+      <div class="sim-control-group">
+        <label for="slider-days">
+          Hari Kerja Efektif per Bulan: <span id="label-days">26 Hari</span>
+        </label>
+        <input type="range" id="slider-days" class="sim-slider" min="20" max="30" step="1" value="26">
+      </div>
+
+      <div class="sim-control-group">
+        <label for="slider-rawmat">
+          Biaya Raw Mat Efektif: <span id="label-rawmat">Rp 2.000 / kg</span>
+        </label>
+        <input type="range" id="slider-rawmat" class="sim-slider" min="1500" max="3000" step="50" value="2000">
+      </div>
+    </div>
+  </aside>
+
+  <!-- Interactive Math Script -->
+  <script>
+    // Baseline Model Constants based on CPO.txt
+    const BASELINE = {
+      mesinCapex: 3600000000,
+      gudangCapex: 1400000000,
+      totalCapex: 5000000000,
+      dailyOutputTons: 20,
+      dailyInputTons: 30,
+      yieldPct: 0.70,
+      hoursPerDay: 21,
+      defaultDaysPerMonth: 26,
+      defaultPricePerKg: 8300,
+      defaultRawMat: 2000,
+      biayaProd: 2000,
+      sewaGudang: 487,
+      capexDeprMonths: 60
+    };
+
+    const sliderPrice = document.getElementById('slider-price');
+    const sliderDays = document.getElementById('slider-days');
+    const sliderRawmat = document.getElementById('slider-rawmat');
+
+    const labelPrice = document.getElementById('label-price');
+    const labelDays = document.getElementById('label-days');
+    const labelRawmat = document.getElementById('label-rawmat');
+
+    function formatRupiah(num) {
+      return 'Rp' + Math.round(num).toLocaleString('id-ID');
+    }
+
+    function recalculate() {
+      const price = Number(sliderPrice.value);
+      const days = Number(sliderDays.value);
+      const rawMat = Number(sliderRawmat.value);
+
+      labelPrice.textContent = formatRupiah(price) + ' / kg';
+      labelDays.textContent = days + ' Hari';
+      labelRawmat.textContent = formatRupiah(rawMat) + ' / kg';
+
+      // Production Sizing
+      const monthlyKg = BASELINE.dailyOutputTons * days * 1000;
+      const monthlyTons = BASELINE.dailyOutputTons * days;
+
+      // HPP
+      const cashHpp = rawMat + BASELINE.biayaProd + BASELINE.sewaGudang;
+      const deprPerMonth = BASELINE.totalCapex / BASELINE.capexDeprMonths;
+      const deprPerKg = Math.round(deprPerMonth / monthlyKg);
+      const fullHpp = cashHpp + deprPerKg;
+
+      // Revenue & Profit
+      const monthlyRevenue = monthlyKg * price;
+      const profitPerKg = price - fullHpp;
+      const monthlyProfit = monthlyKg * profitPerKg;
+      const yearlyProfit = monthlyProfit * 12;
+
+      // Update UI Elements
+      document.getElementById('val-harga-jual').textContent = formatRupiah(price) + '/kg';
+      document.getElementById('val-hari').textContent = days + ' hari';
+      document.getElementById('val-prod-bulan').textContent = monthlyKg.toLocaleString('id-ID') + ` kg (± ${monthlyTons.toFixed(2)} ton)`;
+      document.getElementById('val-omzet').textContent = formatRupiah(monthlyRevenue / 1000000) + ' juta';
+
+      // Table HPP
+      document.getElementById('val-rawmat').textContent = rawMat.toLocaleString('id-ID');
+      document.getElementById('val-cash-hpp').textContent = cashHpp.toLocaleString('id-ID');
+      document.getElementById('val-depresiasi').textContent = deprPerKg.toLocaleString('id-ID');
+      document.getElementById('val-full-hpp').textContent = fullHpp.toLocaleString('id-ID');
+
+      // Profitability
+      document.getElementById('val-prof-hj').textContent = formatRupiah(price) + '/kg';
+      document.getElementById('val-prof-hpp').textContent = formatRupiah(fullHpp) + '/kg';
+      document.getElementById('val-laba-kg').textContent = formatRupiah(profitPerKg) + '/kg';
+      document.getElementById('val-laba-bln').textContent = formatRupiah(monthlyProfit / 1000000) + ' juta';
+      document.getElementById('val-laba-thn').textContent = (yearlyProfit / 1000000000).toFixed(2).replace('.', ',') + ' miliar';
+
+      // KPI Cards
+      document.getElementById('kpi-ton').textContent = monthlyTons.toLocaleString('id-ID');
+      document.getElementById('kpi-omzet').textContent = formatRupiah(monthlyRevenue / 1000000) + ' jt';
+      document.getElementById('kpi-laba').textContent = formatRupiah(monthlyProfit / 1000000) + ' jt';
+    }
+
+    sliderPrice.addEventListener('input', recalculate);
+    sliderDays.addEventListener('input', recalculate);
+    sliderRawmat.addEventListener('input', recalculate);
+
+    document.getElementById('btn-reset-sim').addEventListener('click', () => {
+      sliderPrice.value = BASELINE.defaultPricePerKg;
+      sliderDays.value = BASELINE.defaultDaysPerMonth;
+      sliderRawmat.value = BASELINE.defaultRawMat;
+      recalculate();
+    });
+
+    // Run on initial load
+    recalculate();
+  </script>
+</body>
+</html>
