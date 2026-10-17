@@ -206,7 +206,7 @@ export const BottleneckAndDowntimeSimulator = () => {
               Rp {Math.round(m.bahanBakarTerbuang).toLocaleString('id-ID')}
             </div>
             <p className="text-[10px] text-slate-400 mt-1">
-              Rumus: {downtimeHours.toFixed(1)}j × {((m.gasConsumptionMmbtuPerHour || 6.732)).toFixed(2)} MMBTU × Rp {fuelType === 'PGN' ? '234.000' : '279.000'}
+              Rumus: {downtimeHours.toFixed(1)}j × {((m.gasConsumptionMmbtuPerHour || 6.732)).toFixed(2)} MMBTU × Rp {fuelType === 'PGN' ? '173.880' : '279.000'}
             </p>
           </div>
 
@@ -224,7 +224,7 @@ export const BottleneckAndDowntimeSimulator = () => {
               Rp {Math.round(m.kehilanganLabaMargin).toLocaleString('id-ID')}
             </div>
             <p className="text-[10px] text-slate-400 mt-1">
-              Rumus: {m.lostTonnage.toFixed(0)} Ton × Rp 628.494 (Margin/Ton)
+              Rumus: {m.lostTonnage.toFixed(0)} Ton × Rp {Math.round(m.grossMarginPerTon || 169744).toLocaleString('id-ID')} (Margin/Ton)
             </p>
           </div>
 

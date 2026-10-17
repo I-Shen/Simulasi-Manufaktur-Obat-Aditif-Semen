@@ -28,8 +28,8 @@ export const InteractiveControlSliders = () => {
   const handleResetDefaults = () => {
     setCapacityPerHour(20);
     setWorkingDays(25);
-    setFuelType('CNG');
-    setSellingPrice(4350000);
+    setFuelType('PGN');
+    setSellingPrice(1000000);
   };
 
   return (
@@ -149,7 +149,7 @@ export const InteractiveControlSliders = () => {
                 <Sparkles className="w-3 h-3 text-emerald-400" />
               </div>
               <span className="text-[10px] font-mono text-slate-400 block">$13.00 / MMBTU</span>
-              <span className="text-[10px] font-mono text-emerald-400 font-semibold block">Rp 234.000/MMBTU</span>
+              <span className="text-[10px] font-mono text-emerald-400 font-semibold block">Rp 173.880/MMBTU</span>
             </button>
           </div>
         </div>
@@ -167,17 +167,17 @@ export const InteractiveControlSliders = () => {
           </div>
           <input
             type="range"
-            min="3500000"
-            max="5500000"
-            step="50000"
+            min="600000"
+            max="2500000"
+            step="25000"
             value={sellingPricePerTon}
             onChange={(e) => setSellingPrice(e.target.value)}
             className="w-full cursor-pointer"
           />
           <div className="flex justify-between text-[10px] font-mono text-slate-500 mt-1">
-            <span>Rp 3,5 M</span>
-            <span className="text-emerald-400 font-bold">Rp 4,35 M (Excel)</span>
-            <span>Rp 5,5 M</span>
+            <span>Rp 600k</span>
+            <span className="text-emerald-400 font-bold">Rp 1,00 Jt (Baseline)</span>
+            <span>Rp 2,5 Jt</span>
           </div>
         </div>
       </div>

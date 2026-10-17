@@ -77,7 +77,7 @@ export function App() {
               <span>•</span>
               <span>Target Produksi: <strong>3.500 Ton / Bulan</strong></span>
               <span>•</span>
-              <span className="text-emerald-400 font-semibold">Margin Kotor: Rp 628.494/T (14,45%)</span>
+              <span className="text-emerald-400 font-semibold">Margin Kotor: Rp 169.744/T (16,97%)</span>
               <span>•</span>
               <span className="text-cyan-400">Excel Original Synced</span>
             </div>

@@ -56,7 +56,7 @@ export const CostAndFinancialCards = () => {
             Total HPP Bahan Baku (Col L)
           </span>
           <div className="text-xl lg:text-2xl font-mono font-bold text-white tracking-tight">
-            Rp {Math.round(m?.baseHppPerTon ?? 3582500).toLocaleString('id-ID')}
+            Rp {Math.round(m?.baseHppPerTon ?? 691250).toLocaleString('id-ID')}
             <span className="text-xs font-normal text-slate-400"> / Ton</span>
           </div>
           <div className="mt-2 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px] font-mono">
@@ -76,13 +76,13 @@ export const CostAndFinancialCards = () => {
             </span>
           </div>
           <div className="text-xl lg:text-2xl font-mono font-bold text-cyan-400 tracking-tight">
-            Rp {(sellingPricePerTon ?? 4350000).toLocaleString('id-ID')}
+            Rp {(sellingPricePerTon ?? 1000000).toLocaleString('id-ID')}
             <span className="text-xs font-normal text-slate-400"> / Ton</span>
           </div>
           <div className="mt-2 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px] font-mono">
             <span className="text-slate-400">Gross Margin (=M-L-K):</span>
             <span className="text-emerald-400 font-bold">
-              +{(m?.grossMarginPct ?? 14.45).toFixed(2)}% (+Rp {Math.round(m?.grossMarginPerTon ?? 628494).toLocaleString('id-ID')})
+              +{(m?.grossMarginPct ?? 16.97).toFixed(2)}% (+Rp {Math.round(m?.grossMarginPerTon ?? 169744).toLocaleString('id-ID')})
             </span>
           </div>
         </div>

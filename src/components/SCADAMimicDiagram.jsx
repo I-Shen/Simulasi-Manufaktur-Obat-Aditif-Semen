@@ -254,7 +254,10 @@ export const SCADAMimicDiagram = () => {
                   <div className="text-center">
                     <span className="text-[10px] font-bold text-slate-300 tracking-wider block">ROTARY DRUM</span>
                     <span className="text-xs font-mono font-bold text-amber-400">
-                      {isStopped ? '0 RPM' : '18 RPM'}
+                      {isStopped ? '0 RPM' : `${m.rotaryDrumRpm || 8} RPM`}
+                    </span>
+                    <span className="text-[9px] font-mono text-emerald-400 block">
+                      {isStopped ? 'STANDBY' : '4-9 RPM (Opt 8)'}
                     </span>
                   </div>
                 </div>

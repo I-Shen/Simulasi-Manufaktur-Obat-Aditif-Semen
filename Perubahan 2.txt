@@ -1,0 +1,5 @@
+1. Merubah speed rotary drum menjadi 4 - 9 rpm (optimum 8)
+2.Pada Sheet master_bahan_baku ada perubahan pada Harga Gas Alam Pipa menjadi Rp.173.880, untuk bentonite menjadi Rp.500, dan Calcium menjadi Rp.275
+3. Pada sheet biaya_siklus_hpp ada perubahan pada kolom biaya_maintenance_per_ton_rp menjadi Rp.139.006 lalu pada kolom harga_jual_per_ton_rp menjadi Rp.1.000.000
+
+

@@ -11,35 +11,44 @@ Sistem simulasi interaktif industri dan *Digital Twin* untuk proses pencampuran 
 
 - **Kapasitas Produksi:** 20.00 Ton / Jam (140.00 Ton per shift kerja dengan **7 jam kerja efektif**).
 - **Jadwal Shift Kerja:** **08:30 – 16:30 WIB** (Total 8 Jam) dengan **Jeda Istirahat Siang 1 Jam (12:00 – 13:00 WIB)** di mana mesin berstatus *Standby*.
-- **Komposisi Formulasi:**
-  - $80\%$ Bentonite Clay Curah (BJ 0,80)
-  - $15\%$ Calsium Carbonate (CaCO3) (BJ 2,80)
-  - $5\%$ Soda Ash Dense (Na2CO3) (BJ 1,13)
+- **Rotary Drum Speed:** **4 – 9 RPM (Optimum 8 RPM)** (Revisi 2).
+- **Komposisi Formulasi & HPP Bahan Baku (Revisi 2):**
+  - $80\%$ Bentonite Clay Curah @ Rp 500 / kg = **Rp 400.000 / Ton**
+  - $15\%$ Calsium Carbonate (CaCO3) @ Rp 275 / kg = **Rp 41.250 / Ton**
+  - $5\%$ Soda Ash Dense (Na2CO3) @ Rp 5.000 / kg = **Rp 250.000 / Ton**
+  - **Total HPP Bahan Baku:** **Rp 691.250 / Ton** (turun dari Rp 3.582.500 / Ton).
+- **Struktur Harga Jual & Margin (Revisi 2):**
+  - Harga Jual: **Rp 1.000.000 / Ton** (turun dari Rp 4.350.000 / Ton)
+  - Biaya Maintenance: **Rp 139.006 / Ton**
+  - Gross Margin: $1.000.000 - 691.250 - 139.006 =$ **Rp 169.744 / Ton (16,97%)**
 - **Logistik & Buffer Kritis:**
   - *Stockpile 1 (Bentonite):* 134,4 Ton (Habis dalam 8,40 jam operasional penuh jika pasokan terputus).
   - *Stockpile 2 (Calsium):* 120,96 Ton (Habis dalam 40,32 jam operasional).
   - *Bin Silo Produk Akhir:* 72 m³ (86,4 Ton) $\rightarrow$ Buffer holding time 3,28 s.d. 4,32 jam (wajib dispatch truk tiap 2 jam).
-- **Efisiensi Energi:** Pipa Gas PGN ($13,00/MMBTU @ Rp 234.000/MMBTU) menghemat **Rp 53,0 Juta / bulan** dibanding CNG ($15,15/MMBTU @ Rp 279.000/MMBTU).
-- **Investasi Capex:** Rp 5,15 Miliar (Proyeksi BEP: 4,7 bulan pada target 3.500 Ton/bulan).
+- **Efisiensi Energi (Revisi 2):** Pipa Gas PGN (**Rp 173.880 / MMBTU**) menghemat **Rp 123,8 Juta / bulan** dibanding CNG ($15,15/MMBTU @ Rp 279.000 / MMBTU).
+- **Investasi Capex:** Rp 5,15 Miliar.
 
 ---
 
-## 📋 Catatan Revisi Database Final (Berdasarkan Perubahan.txt)
+## 📋 Catatan Sinkronisasi Database Revisi 2 (`Perubahan 2.txt` & Excel Master v3)
 
 Telah dilakukan sinkronisasi menyeluruh terhadap database Excel terbaru (`Database_Simulasi_SCADA_dan_Operasional.xlsx`):
-1. **Sheet `insiden_downtime_bottleneck` (Point 1):** Penamaan kolom `penalti_reheat` disesuaikan menjadi **`bahan_bakar_terbuang_rp`**.
-2. **Sheet `insiden_downtime_bottleneck` (Point 2):** Formula bahan bakar terbuang diperbarui menjadi:
-   $$\text{Bahan Bakar Terbuang} = \text{Durasi (Jam)} \times \text{Konsumsi Gas (MMBTU/Jam)} \times \text{Tarif Gas per MMBTU}$$
-   - Contoh DWT Truk Macet (3,5 Jam): $3,5 \times 6,732 \times 234.000 = \mathbf{Rp\ 5.513.181}$.
-3. **Sheet `insiden_downtime_bottleneck` (Point 3):** Formula kehilangan margin laba diperbarui menjadi:
-   $$\text{Kehilangan Margin Laba} = \text{Output Hilang (Ton)} \times \text{Gross Margin per Ton (Rp 628.494)}$$
-   - Contoh DWT Truk Macet (70 Ton): $70 \times 628.494 = \mathbf{Rp\ 43.994.580}$.
-4. **Sheet `biaya_siklus_hpp` (Point 4):** Nilai `biaya_maintenance_per_ton_rp` (Kolom K) ditetapkan sebesar **Rp 139.006 / Ton**.
-5. **Sheet `biaya_siklus_hpp` (Point 5):** Formula `gross_margin_per_ton_rp` (Kolom N) diperbarui menjadi `= M3 - L3 - K3`:
-   $$\text{Gross Margin} = \text{Harga Jual (4.350.000)} - \text{HPP (3.582.500)} - \text{Maintenance (139.006)} = \mathbf{Rp\ 628.494 / Ton}\ (14,45\%)$$
-6. **Sheet `master_bahan_baku` (Point 6):** Penyesuaian tarif energi gas per MMBTU:
-   - `EN-PGN-09` (Gas Alam Pipa PGN $13): **Rp 234.000 / MMBTU**
-   - `EN-CNG-10` (Compressed Natural Gas CNG $15.15): **Rp 279.000 / MMBTU**
+1. **Kecepatan Rotary Drum:** Disesuaikan menjadi **4 – 9 RPM (optimum 8 RPM)**.
+2. **Sheet `master_bahan_baku`:**
+   - `RAW-BEN-01` (Bentonite Clay 80%): **Rp 500 / kg**
+   - `RAW-CAL-02` (Calsium Carbonate 15%): **Rp 275 / kg**
+   - `EN-PGN-09` (Gas Alam Pipa): **Rp 173.880 / MMBTU**
+   - `EN-CNG-10` (Compressed Natural Gas): **Rp 279.000 / MMBTU**
+3. **Sheet `biaya_siklus_hpp`:**
+   - `total_hpp_per_ton_rp`: $0.8 \times 500.000 + 0.15 \times 275.000 + 0.05 \times 5.000.000 = \mathbf{Rp\ 691.250 / Ton}$
+   - `biaya_maintenance_per_ton_rp`: **Rp 139.006 / Ton**
+   - `harga_jual_per_ton_rp`: **Rp 1.000.000 / Ton**
+   - `gross_margin_per_ton_rp`: $1.000.000 - 691.250 - 139.006 = \mathbf{Rp\ 169.744 / Ton}\ (16,97\%)$
+4. **Sheet `insiden_downtime_bottleneck`:**
+   - Formula bahan bakar terbuang: $\text{Durasi (Jam)} \times \text{Konsumsi Gas (MMBTU/Jam)} \times \text{Tarif Gas PGN (Rp 173.880)}$
+   - Formula kehilangan margin laba: $\text{Output Hilang (Ton)} \times \text{Gross Margin per Ton (Rp 169.744)}$
+5. **Sheet Tambahan `simulasi_skenario_demand_range`:**
+   - Menghubungkan demand 10, 15, 20, 25, 30 hari operasional dan skenario 1 s.d. 3 shift kerja.
 
 ---
 

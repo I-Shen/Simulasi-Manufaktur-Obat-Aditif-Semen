@@ -16,7 +16,8 @@ export const useIndustrialStore = create((set, get) => ({
   shiftHours: 7, // Effective working hours (8 hours total elapsed - 1 hour lunch break)
   workingDaysPerMonth: 25, // Days per month (10, 15, 20, 25, 30)
   fuelType: 'PGN', // 'PGN' (Default recommended) | 'CNG'
-  sellingPricePerTon: 4350000, // Rp / Ton
+  sellingPricePerTon: 1000000, // Rp 1.000.000 / Ton (Revisi Database Col M)
+  rotaryDrumRpm: 8, // 4 - 9 RPM (optimum 8 RPM)
   usdToIdr: 16500,
 
   // Fixed Capex
@@ -71,6 +72,7 @@ export const useIndustrialStore = create((set, get) => ({
   // -------------------------------------------------------------------
   // ACTIONS & TIME CONTROLLERS
   // -------------------------------------------------------------------
+  setRotaryDrumRpm: (rpm) => set({ rotaryDrumRpm: Math.min(9, Math.max(4, Number(rpm))) }),
   setAppMode: (mode) => {
     if (mode === 'normal') {
       // Revert completely to baseline 1-shift unmodified Excel data
@@ -80,7 +82,8 @@ export const useIndustrialStore = create((set, get) => ({
         shiftHours: 7,
         workingDaysPerMonth: 25,
         fuelType: 'PGN',
-        sellingPricePerTon: 4350000,
+        sellingPricePerTon: 1000000,
+        rotaryDrumRpm: 8,
         bentoniteStock: 134.4,
         calciumStock: 120.96,
         siloStock: 42.0,
@@ -327,14 +330,14 @@ export const useIndustrialStore = create((set, get) => ({
     const tonsPer20Days = tonsPerDay * 20;
     const tonsPerMonth = isTrial ? trialScen.monthlyOutput : tonsPerShift * days; // 3,500 Ton (normal) vs trial monthly
 
-    // Raw Material Formulation Costs (per Ton)
-    const bentoniteCostPerTon = 0.8 * 3650000; // Rp 2.920.000
-    const calciumCostPerTon = 0.15 * 2750000; // Rp 412.500
-    const sodaAshCostPerTon = 0.05 * 5000000; // Rp 250.000
-    const rawMaterialCostPerTon = bentoniteCostPerTon + calciumCostPerTon + sodaAshCostPerTon; // Rp 3.582.500
+    // Raw Material Formulation Costs (per Ton) - Revisi 2 (Bentonite Rp 500, Calcium Rp 275, Soda Ash Rp 5.000)
+    const bentoniteCostPerTon = 0.8 * 500000; // Rp 400.000 (80% @ Rp 500/kg)
+    const calciumCostPerTon = 0.15 * 275000; // Rp 41.250 (15% @ Rp 275/kg)
+    const sodaAshCostPerTon = 0.05 * 5000000; // Rp 250.000 (5% @ Rp 5.000/kg)
+    const rawMaterialCostPerTon = bentoniteCostPerTon + calciumCostPerTon + sodaAshCostPerTon; // Rp 691.250 / Ton (Col L)
 
-    // Gas Pricing
-    const gasPricePerMmbtu = s.fuelType === 'PGN' ? 234000 : 279000;
+    // Gas Pricing - Revisi 2: PGN Rp 173.880 / MMBTU vs CNG Rp 279.000 / MMBTU
+    const gasPricePerMmbtu = s.fuelType === 'PGN' ? 173880 : 279000;
     // Wet season overload: burner consumes 18% more gas to evaporate excess 35% moisture
     const burnerOverloadMultiplier = s.isWetSeasonBurnerOverload ? 1.18 : 1.0;
     const gasConsumptionMmbtuPerHour = 6.732 * (cap / 20) * burnerOverloadMultiplier;
@@ -353,11 +356,11 @@ export const useIndustrialStore = create((set, get) => ({
     const operationalCostPerTon = fuelCostPerTon + electricityCostPerTon + forkliftCostPerTon + laborCostPerTon;
 
     // Base HPP per Ton
-    const baseHppPerTon = rawMaterialCostPerTon; // Rp 3.582.500
+    const baseHppPerTon = rawMaterialCostPerTon; // Rp 691.250
     const fullCostPerTon = isTrial ? trialScen.hppPerTon : (baseHppPerTon + maintenanceCostPerTon);
 
-    // Financial Revenues & Margins
-    const revenuePerTon = s.sellingPricePerTon; // Rp 4.350.000
+    // Financial Revenues & Margins (Revisi 2: Harga Jual Rp 1.000.000 / Ton, Gross Margin = M - L - K = Rp 169.744 / Ton)
+    const revenuePerTon = s.sellingPricePerTon; // Default Rp 1.000.000 / Ton
     const grossMarginPerTon = revenuePerTon - baseHppPerTon - maintenanceCostPerTon;
     const grossMarginPct = isTrial ? trialScen.grossMarginPct : (revenuePerTon > 0 ? (grossMarginPerTon / revenuePerTon) * 100 : 0);
 
@@ -378,8 +381,8 @@ export const useIndustrialStore = create((set, get) => ({
     // Break Even Point (BEP) in Months for Capex Rp 5,15 Miliar
     const bepMonths = monthlyNetProfit > 0 ? s.capexInvestment / monthlyNetProfit : 999;
 
-    // PGN Savings vs CNG
-    const fuelSavingsPerTon = (0.3366 * 279000) - (0.3366 * 234000);
+    // PGN Savings vs CNG: (0.3366 * 279000) - (0.3366 * 173880) = Rp 35.383,39 / Ton
+    const fuelSavingsPerTon = (0.3366 * 279000) - (0.3366 * 173880);
     const monthlyPgnSavings = fuelSavingsPerTon * tonsPerMonth;
 
     // Depletion Timeframes & Predictive Timestamps
@@ -426,6 +429,9 @@ export const useIndustrialStore = create((set, get) => ({
       tonsPer10Days,
       tonsPer20Days,
       tonsPerMonth,
+      bentoniteCostPerTon,
+      calciumCostPerTon,
+      sodaAshCostPerTon,
       rawMaterialCostPerTon,
       fuelCostPerTon,
       electricityCostPerTon,
@@ -465,7 +471,8 @@ export const useIndustrialStore = create((set, get) => ({
       kehilanganLabaMargin,
       totalDowntimeLoss,
       gasPricePerMmbtu,
-      gasConsumptionMmbtuPerHour
+      gasConsumptionMmbtuPerHour,
+      rotaryDrumRpm: s.rotaryDrumRpm
     };
   }
 }));

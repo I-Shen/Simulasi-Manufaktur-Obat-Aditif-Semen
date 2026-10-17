@@ -139,9 +139,9 @@ export const ChartsPanel = () => {
           }
         },
         data: [
-          { value: 2920000, name: 'Bentonite (80%)', itemStyle: { color: '#06b6d4' } },
-          { value: 412500, name: 'Calsium (15%)', itemStyle: { color: '#10b981' } },
-          { value: 250000, name: 'Soda Ash (5%)', itemStyle: { color: '#f59e0b' } },
+          { value: Math.round(m.bentoniteCostPerTon || 400000), name: 'Bentonite (80%)', itemStyle: { color: '#06b6d4' } },
+          { value: Math.round(m.calciumCostPerTon || 41250), name: 'Calsium (15%)', itemStyle: { color: '#10b981' } },
+          { value: Math.round(m.sodaAshCostPerTon || 250000), name: 'Soda Ash (5%)', itemStyle: { color: '#f59e0b' } },
           { value: Math.round(m.fuelCostPerTon), name: `Gas Burner (${fuelType})`, itemStyle: { color: '#f97316' } },
           { value: Math.round(m.electricityCostPerTon), name: 'Listrik PLN 100kW', itemStyle: { color: '#a855f7' } },
           { value: Math.round(m.forkliftCostPerTon), name: 'Solar Forklift', itemStyle: { color: '#64748b' } },
